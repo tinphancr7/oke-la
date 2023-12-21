@@ -805,7 +805,7 @@ function ListMatchesHome() {
 										matchGroupLeague={item}
 										key={item?._id}
 									/>
-									{/* <ListMatchesHomeMobile
+									<ListMatchesHomeMobile
 										isGroup={Boolean(showBy === "league")}
 										key={item?._id}
 										item={item}
@@ -814,7 +814,7 @@ function ListMatchesHome() {
 										handleLikeMatch={handleLikeMatch}
 										handleUnLikeMatch={handleUnLikeMatch}
 										handleNavigate={handleNavigate}
-									/> */}
+									/>
 								</>
 							)}
 						</>
