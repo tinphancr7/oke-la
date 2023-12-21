@@ -226,9 +226,32 @@ function ListMatchesHome() {
 	};
 
 	const getData = async (filtering = false) => {
-		getDataTodayMatches(filtering);
+		if (tab == 3) {
+			getDataUpcomingMatches(filtering);
+		} else if (tab === 2) {
+			getDataTodayRateMatches(filtering);
+		} else if (tab == 1) {
+			getDataPlayingMatches(filtering);
+		} else if (tab == 4) {
+			getDataFinishMatch(filtering);
+		} else {
+			getDataTodayMatches(filtering);
+		}
 	};
 
+	const getDataSearch = async () => {
+		if (tab == 3) {
+			getDataUpcomingMatches(true);
+		} else if (tab === 2) {
+			getDataTodayMatches(true);
+		} else if (tab == 1) {
+			getDataPlayingMatches(true);
+		} else if (tab == 4) {
+			getDataFinishMatch(true);
+		} else {
+			getDataTodayMatches(true);
+		}
+	};
 	const getMatchesByDateGroupLeagueNext = async (page) => {
 		return await getMatchesByDateGroupLeague(
 			page,
@@ -757,7 +780,7 @@ function ListMatchesHome() {
 						<>
 							{tab === 2 ? (
 								<>
-									{/* <ListMatchOddHomeItem
+									<ListMatchOddHomeItem
 										isGroup={Boolean(showBy === "league")}
 										matchThesport={[]}
 										matchGroupLeague={item}
@@ -772,16 +795,16 @@ function ListMatchesHome() {
 										handleLikeMatch={handleLikeMatch}
 										handleUnLikeMatch={handleUnLikeMatch}
 										handleNavigate={handleNavigate}
-									/> */}
+									/>
 								</>
 							) : (
 								<>
-									{/* <ListMatchHomeItem
+									<ListMatchHomeItem
 										isGroup={Boolean(showBy === "league")}
 										matchThesport={[]}
 										matchGroupLeague={item}
 										key={item?._id}
-									/> */}
+									/>
 									<ListMatchesHomeMobile
 										isGroup={Boolean(showBy === "league")}
 										key={item?._id}
@@ -801,7 +824,7 @@ function ListMatchesHome() {
 				{(loading || loadingMore) && <Loading />}
 			</div>
 			{/* filter list matches */}
-			{/* <FilterListMatchesHome
+			<FilterListMatchesHome
 				listLeague={listLeague as any}
 				onClose={() => setShowFilterLeague(false)}
 				show={showFilterLeague}
@@ -809,7 +832,7 @@ function ListMatchesHome() {
 				onChangeChosenListLeague={handleChangeChosenListLeague}
 				onFilterByLeague={handleFilterByLeague}
 				handleCheckAll={handleCheckAll}
-			/> */}
+			/>
 			<div className="flex items-center justify-center mt-4">
 				<button
 					onClick={() => handleLoadMore(pageIndex + 1)}
