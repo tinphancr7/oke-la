@@ -33,7 +33,7 @@ const MainLayout = ({children}: {children: ReactNode}) => {
 			<Header />
 
 			<div className="pt-[130px] lg:pt-20">{children}</div>
-			{/* <Footer /> */}
+			<Footer />
 		</>
 	);
 };
