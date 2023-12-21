@@ -31,9 +31,9 @@ const MainLayout = ({children}: {children: ReactNode}) => {
 		<>
 			{loading && <PreLoader />}
 			<Header />
-			{}
+
 			<div className="pt-[130px] lg:pt-20">{children}</div>
-			<Footer />
+			{/* <Footer /> */}
 		</>
 	);
 };
