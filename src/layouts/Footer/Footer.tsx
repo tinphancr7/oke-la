@@ -1,11 +1,9 @@
 import Image from "next/image";
 import React from "react";
-import logo from "@/assets/images/logo.svg";
 const Footer = () => {
 	return (
 		// Ngay đây có z-50 nè ai muốn thêm thì thêm nha
 		<div className="w-full h-full relative footer  px-4 md:py-8 pt-8 lg:p-0">
-			{/* <div className="bg-[#313131] absolute top-0 left-0 right-0 bottom-0 opacity-1"></div> */}
 			<div className="w-full h-full">
 				<div className="xl:container mx-auto pt-2">
 					<div className=" flex flex-col justify-center w-full ">
