@@ -3,13 +3,10 @@ import {axiosInstanceISport, axiosInstanceISportAuth} from ".";
 export const getPlayingMatchGroupLeague = (
 	pageIndex: number,
 	pageSize: number,
-	search: string,
-	leagueId: string = "",
-	round: string = "",
-	showBy: string = ""
+	search: string
 ) =>
 	axiosInstanceISportAuth.get(
-		`/getPlayingMatchesGroupLeague?pageIndex=${pageIndex}&pageSize=${pageSize}&leagueId=${leagueId}&round=${round}&search=${search}&showBy=${showBy}`
+		`/getPlayingMatchesGroupLeague?pageIndex=${pageIndex}&pageSize=${pageSize}`
 	);
 
 export const getMatchesByDate = (
@@ -52,25 +49,19 @@ export const getMatchesByDateGroupLeague = (
 	pageIndex: number,
 	pageSize: number,
 	date: string,
-	search: string = "",
-	leagueId: string = "",
-	round: string = "",
-	showBy: string = ""
+	search: string = ""
 ) =>
 	axiosInstanceISportAuth.get(
-		`/getScheduleAndResultByDateGroupLeague?pageIndex=${pageIndex}&pageSize=${pageSize}&date=${date}&leagueId=${leagueId}&round=${round}&search=${search}&showBy=${showBy}`
+		`/getScheduleAndResultByDateGroupLeague?pageIndex=${pageIndex}&pageSize=${pageSize}&date=${date}`
 	);
 export const getMatchesByDateGroupRateLeague = (
 	pageIndex: number,
 	pageSize: number,
 	date: string,
-	search: string = "",
-	leagueId: string = "",
-	round: string = "",
-	showBy: string = ""
+	search: string = ""
 ) =>
 	axiosInstanceISportAuth.get(
-		`/getScheduleAndResultByDateGroupRateLeague?pageIndex=${pageIndex}&pageSize=${pageSize}&date=${date}&leagueId=${leagueId}&round=${round}&search=${search}&showBy=${showBy}`
+		`/getScheduleAndResultByDateGroupRateLeague?pageIndex=${pageIndex}&pageSize=${pageSize}&date=${date}`
 	);
 
 export const getHotMatchesGroupLeague = (

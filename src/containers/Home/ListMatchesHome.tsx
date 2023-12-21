@@ -52,26 +52,10 @@ const convertDateToVN = (date: string) => {
 	}
 };
 
-type Props = {
-	isSchedulePage?: boolean;
-	matchThesport: any[];
-	search: string;
-	league: string;
-	round?: number | string;
-};
-
-function ListMatchesHome({
-	isSchedulePage,
-	matchThesport,
-	search,
-	league,
-	round,
-}: Props) {
+function ListMatchesHome() {
 	const [tab, setTab] = useState(0);
 
 	const {user, updateAuthUser} = useContext(AuthContext);
-
-	const [hotMatchesData, setHotMatch] = useState<any[]>();
 
 	const router = useRouter();
 
@@ -95,29 +79,19 @@ function ListMatchesHome({
 	const [showBy, setShowBy] = useState<"league" | "time">("league");
 	const [date, setDate] = useState(new Date());
 
-	const caculateTotalPage = (totalDoc: number, pageSize: number) => {
-		return Math.ceil((totalDoc - 1) / pageSize);
-	};
-
 	const getDataPlayingMatches = async (isFiltering = false) => {
 		try {
 			setLoading(true);
 			const playingMatchesRes = await getPlayingMatchGroupLeague(
 				1,
 				showBy === "league" ? pageSize : 9999,
-
-				searchMatch,
-				!isSchedulePage && listChosenLeague?.length > 0 && isFiltering
-					? listChosenLeague?.toString()
-					: league,
-				round?.toString(),
-				showBy
+				searchMatch
 			);
 
 			setPlayingMatches(playingMatchesRes?.data?.result);
 
 			setUpcomingHotMatches([]);
-			setHotMatch([]);
+
 			setFinishMatches([]);
 			setTodayMatches([]);
 			setPageIndex(1);
@@ -140,18 +114,13 @@ function ListMatchesHome({
 				1,
 				showBy === "league" ? pageSize : 9999,
 				moment(date).format("YYYY-MM-DD"),
-				searchMatch,
-				!isSchedulePage && listChosenLeague?.length > 0 && isFiltering
-					? listChosenLeague?.toString()
-					: league,
-				round?.toString(),
-				showBy
+				searchMatch
 			);
 
 			getMatchesByDateGroupLeagueNext(2);
 			setTodayMatches(todayMatchesRes?.data?.result);
 			setTodayRateMatches([]);
-			setHotMatch([]);
+
 			setFinishMatches([]);
 			setUpcomingHotMatches([]);
 			setPlayingMatches([]);
@@ -174,18 +143,13 @@ function ListMatchesHome({
 				1,
 				showBy === "league" ? pageSize : 9999,
 				moment(date).format("YYYY-MM-DD"),
-				searchMatch,
-				!isSchedulePage && listChosenLeague?.length > 0 && isFiltering
-					? listChosenLeague?.toString()
-					: league,
-				round?.toString(),
-				showBy
+				searchMatch
 			);
 
 			getMatchesByDateGroupLeagueNext(2);
 			setTodayRateMatches(todayRateMatchesRes?.data?.result);
 			setTodayMatches([]);
-			setHotMatch([]);
+
 			setFinishMatches([]);
 			setUpcomingHotMatches([]);
 			setPlayingMatches([]);
@@ -209,56 +173,18 @@ function ListMatchesHome({
 				1,
 				showBy === "league" ? pageSize : 9999,
 				moment(date).format("YYYY-MM-DD"),
-				searchMatch,
-				!isSchedulePage && listChosenLeague?.length > 0 && isFiltering
-					? listChosenLeague?.toString()
-					: league,
-				round?.toString(),
-				showBy
+				searchMatch
 			);
 
 			setFinishMatches(finishedMatchesRes?.data?.result || []);
 
 			setUpcomingHotMatches([]);
-			setHotMatch([]);
+
 			setPlayingMatches([]);
 			setTodayMatches([]);
 			setTodayRateMatches([]);
 			setPageIndex(1);
 			if (pageIndex >= finishedMatchesRes?.data?.totalPage) {
-				setHasmore(false);
-			} else {
-				setHasmore(true);
-			}
-		} catch (error) {
-			console.log(error);
-		} finally {
-			setLoading(false);
-		}
-	};
-
-	const getDataHotMatches = async (isFiltering = false) => {
-		try {
-			setLoading(true);
-			const hotMatchesRes = await getHotMatchesGroupLeagueAuth(
-				1,
-				showBy === "league" ? pageSize : 9999,
-				searchMatch,
-				!isSchedulePage && listChosenLeague?.length > 0 && isFiltering
-					? listChosenLeague?.toString()
-					: league,
-				round?.toString(),
-				showBy
-			);
-
-			setTodayMatches([]);
-			setPlayingMatches([]);
-			setFinishMatches([]);
-			setUpcomingHotMatches([]);
-			setPageIndex(1);
-			setHotMatch(hotMatchesRes?.data?.result);
-
-			if (hotMatchesRes.data?.result?.length <= 0) {
 				setHasmore(false);
 			} else {
 				setHasmore(true);
@@ -277,16 +203,11 @@ function ListMatchesHome({
 				1,
 				showBy === "league" ? pageSize : 9999,
 				moment(date).format("YYYY-MM-DD"),
-				searchMatch,
-				!isSchedulePage && listChosenLeague?.length > 0 && isFiltering
-					? listChosenLeague?.toString()
-					: league,
-				round?.toString(),
-				showBy
+				searchMatch
 			);
 
 			setUpcomingHotMatches(todayMatchesRes?.data?.result);
-			setHotMatch([]);
+
 			setFinishMatches([]);
 			setTodayMatches([]);
 			setTodayRateMatches([]);
@@ -336,10 +257,7 @@ function ListMatchesHome({
 			page,
 			pageSize,
 			moment(date).format("YYYY-MM-DD"),
-			searchMatch,
-			filtering ? listChosenLeague?.toString() : league,
-			round?.toString(),
-			showBy
+			searchMatch
 		);
 	};
 	const handleLoadMore = async (page: number) => {
@@ -353,22 +271,12 @@ function ListMatchesHome({
 					page,
 					pageSize,
 					moment(date).format("YYYY-MM-DD"),
-					searchMatch,
-					filtering ? listChosenLeague?.toString() : league,
-					round?.toString(),
-					showBy
+					searchMatch
 				);
 
 				setUpcomingHotMatches((prev) => [...prev, ...result?.data?.result]);
 			} else if (tab === 1) {
-				result = await getPlayingMatchGroupLeague(
-					page,
-					pageSize,
-					searchMatch,
-					filtering ? listChosenLeague?.toString() : league,
-					round?.toString(),
-					showBy
-				);
+				result = await getPlayingMatchGroupLeague(page, pageSize, searchMatch);
 
 				setPlayingMatches((prev) => [...prev, ...result?.data?.result]);
 			} else if (tab === 2) {
@@ -376,10 +284,7 @@ function ListMatchesHome({
 					page,
 					pageSize,
 					moment(date).format("YYYY-MM-DD"),
-					searchMatch,
-					filtering ? listChosenLeague?.toString() : league,
-					round?.toString(),
-					showBy
+					searchMatch
 				);
 
 				setTodayRateMatches((prev) => [...prev, ...result?.data?.result]);
@@ -388,10 +293,7 @@ function ListMatchesHome({
 					page,
 					pageSize,
 					moment(date).format("YYYY-MM-DD"),
-					searchMatch,
-					filtering ? listChosenLeague?.toString() : league,
-					round?.toString(),
-					showBy
+					searchMatch
 				);
 
 				setFinishMatches((prev) => [...prev, ...result?.data?.result]);
@@ -400,10 +302,7 @@ function ListMatchesHome({
 					page,
 					pageSize,
 					moment(date).format("YYYY-MM-DD"),
-					searchMatch,
-					filtering ? listChosenLeague?.toString() : league,
-					round?.toString(),
-					showBy
+					searchMatch
 				);
 				getMatchesByDateGroupLeagueNext(page + 1);
 
@@ -426,7 +325,7 @@ function ListMatchesHome({
 
 	useEffect(() => {
 		getData();
-	}, [tab, round, league, showBy, date]);
+	}, [tab, showBy, date]);
 
 	// useEffect(() => {
 	//   const debounce = setTimeout(() => {
@@ -883,7 +782,7 @@ function ListMatchesHome({
 								<>
 									<ListMatchOddHomeItem
 										isGroup={Boolean(showBy === "league")}
-										matchThesport={matchThesport}
+										matchThesport={[]}
 										matchGroupLeague={item}
 										key={item?._id}
 									/>
@@ -902,11 +801,11 @@ function ListMatchesHome({
 								<>
 									<ListMatchHomeItem
 										isGroup={Boolean(showBy === "league")}
-										matchThesport={matchThesport}
+										matchThesport={[]}
 										matchGroupLeague={item}
 										key={item?._id}
 									/>
-									{/* <ListMatchesHomeMobile
+									<ListMatchesHomeMobile
 										isGroup={Boolean(showBy === "league")}
 										key={item?._id}
 										item={item}
@@ -915,7 +814,7 @@ function ListMatchesHome({
 										handleLikeMatch={handleLikeMatch}
 										handleUnLikeMatch={handleUnLikeMatch}
 										handleNavigate={handleNavigate}
-									/> */}
+									/>
 								</>
 							)}
 						</>

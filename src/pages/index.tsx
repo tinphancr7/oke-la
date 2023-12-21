@@ -19,20 +19,6 @@ import {GetServerSidePropsContext} from "next";
 import Head from "next/head";
 import React, {useEffect, useState} from "react";
 
-type Props = {
-	message: any;
-	playingMatches: any[];
-	todayMatches: any[];
-	hotMatches: any[];
-	finishedMatches: any[];
-	sliderMatches: any[];
-	tips: ITip[];
-	matchThesport: any[];
-	tags: string[];
-	ranks: IRank[];
-	rankUsers: any[];
-};
-
 function HomePage() {
 	return (
 		<>
@@ -51,11 +37,7 @@ function HomePage() {
 
 							<HotLeagueHomeMobile /> */}
 
-							{/* <ListMatchesHome
-                search={searchMatch}
-                matchThesport={matchThesport}
-                league={league}
-              /> */}
+							<ListMatchesHome />
 						</div>
 						<div className="hidden lg:block col-span-12 lg:col-span-3 ">
 							<div className="sticky top-24">
