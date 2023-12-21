@@ -60,7 +60,7 @@ function HomePage() {
 						<div className="hidden lg:block col-span-12 lg:col-span-3 ">
 							<div className="sticky top-24">
 								<GetPromotion />
-								{/* <ChatRankHome /> */}
+								<ChatRankHome />
 								<UserRankTableV2 />
 							</div>
 						</div>

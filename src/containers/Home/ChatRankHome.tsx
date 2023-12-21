@@ -6,7 +6,7 @@ import ChatHomeItem from "./ChatHomeItem";
 import RankHomeItem from "./RankHomeItem";
 import {SocketContext} from "@/context/SocketContext";
 import {useAppDispatch, useAppSelector} from "@/redux";
-import {getListMessagesHome} from "@/redux/slice/messageSlice";
+
 import {IMessage, IRank} from "@/interfaces";
 import {AuthContext} from "@/context/AuthContext";
 import EmojiPicker from "emoji-picker-react";
@@ -14,7 +14,6 @@ import Auth from "@/layouts/Auth";
 import {getRankUsers} from "@/apis/user";
 
 type Props = {
-	ranks: IRank[];
 	home?: boolean;
 };
 const rankListUser = [
@@ -39,7 +38,7 @@ const rankListUser = [
 		type: "year",
 	},
 ];
-function ChatRankHome({ranks, home = false}: Props) {
+function ChatRankHome({home = false}: Props) {
 	const {user, setIsOpen} = useContext(AuthContext);
 	const [rankUsers, setRankUsers] = useState<any>([]);
 
