@@ -42,20 +42,18 @@ function HomePage({
 	ranks,
 	rankUsers,
 }: Props) {
-	const dispatch = useAppDispatch();
-	useEffect(() => {
-		if (message) dispatch(initMessageHome(message));
-	}, [message, dispatch]);
+	// const dispatch = useAppDispatch();
+	// useEffect(() => {
+	// 	if (message) dispatch(initMessageHome(message));
+	// }, [message, dispatch]);
 
-	const [searchMatch, setSearch] = useState("");
-	const [league, setLeague] = useState("");
 	return (
 		<>
-			<Head>
+			{/* <Head>
 				{tags?.map((tag, index) => (
 					<React.Fragment key={index}>{parse(tag)}</React.Fragment>
 				))}
-			</Head>
+			</Head> */}
 			<div className="bg-[#EEE] py-7">
 				<div className="container mx-auto md:px-4 xl:px-2">
 					<div className="grid grid-cols-12 gap-x-5">
@@ -67,9 +65,9 @@ function HomePage({
 							</div> */}
 						</div>
 						<div className="col-span-12 lg:col-span-6">
-							<GetPromotion isMobile />
+							{/* <GetPromotion isMobile />
 
-							<HotLeagueHomeMobile />
+							<HotLeagueHomeMobile /> */}
 
 							{/* <ListMatchesHome
                 search={searchMatch}
@@ -93,27 +91,27 @@ function HomePage({
 
 export default HomePage;
 
-export async function getServerSideProps(ctx: GetServerSidePropsContext) {
-	try {
-		const [messageRes, matchThesport, seo, rank] = await Promise.all([
-			getMessagesHome(1, 100),
-			getMatchTheSport(),
-			getSeoByLink("/"),
-			getRankTable(),
-		]);
+// export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+// 	try {
+// 		const [messageRes, matchThesport, seo, rank] = await Promise.all([
+// 			getMessagesHome(1, 100),
+// 			getMatchTheSport(),
+// 			getSeoByLink("/"),
+// 			getRankTable(),
+// 		]);
 
-		return {
-			props: {
-				message: messageRes.data?.result,
-				matchThesport: matchThesport.data?.matchThesport || [],
-				tags: seo?.data?.result?.tags || [],
-				ranks: rank?.data?.result?.data || [],
-			},
-		};
-	} catch (error) {
-		console.log(error);
-		return {
-			props: {},
-		};
-	}
-}
+// 		return {
+// 			props: {
+// 				message: messageRes.data?.result,
+// 				matchThesport: matchThesport.data?.matchThesport || [],
+// 				tags: seo?.data?.result?.tags || [],
+// 				ranks: rank?.data?.result?.data || [],
+// 			},
+// 		};
+// 	} catch (error) {
+// 		console.log(error);
+// 		return {
+// 			props: {},
+// 		};
+// 	}
+// }

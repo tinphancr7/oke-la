@@ -1,13 +1,6 @@
-import {
-	getCentralPointMatches,
-	getHotMatch,
-	getMatchTheSport,
-	getMatchesByDateWithOdds,
-	getMatchesByDateWithOddsSlide,
-} from "@/apis/match";
+import {getMatchTheSport} from "@/apis/match";
 import {getMessagesHome} from "@/apis/message";
 import {getSeoByLink} from "@/apis/seo";
-import {getPagingTips} from "@/apis/tip";
 import {getRankTable, getRankUsers} from "@/apis/user";
 import UserRankTableV2 from "@/components/UserRankTableV2";
 import ChatRankHome from "@/containers/Home/ChatRankHome";
@@ -15,11 +8,8 @@ import GetPromotion from "@/containers/Home/GetPromotion";
 import HotLeagueHome from "@/containers/Home/HotLeagueHome";
 import HotLeagueHomeMobile from "@/containers/Home/HotLeagueHomeMobile";
 import LeagueOtherHome from "@/containers/Home/LeagueOtherHome";
-import ListBannersHome from "@/containers/Home/ListBannersHome";
 import ListMatchesHome from "@/containers/Home/ListMatchesHome";
 import MyFavouriteLeagues from "@/containers/Home/MyFavouriteLeagues";
-import SlideListMatchesHome from "@/containers/Home/SlideListMatchesHome";
-import TipsHome from "@/containers/Home/TipsHome";
 import {IRank, ITip} from "@/interfaces";
 import {useAppDispatch} from "@/redux";
 import {initMessageHome} from "@/redux/slice/messageSlice";
@@ -57,8 +47,6 @@ function HomePage({
 		if (message) dispatch(initMessageHome(message));
 	}, [message, dispatch]);
 
-	const [searchMatch, setSearch] = useState("");
-	const [league, setLeague] = useState("");
 	return (
 		<>
 			<Head>
@@ -70,35 +58,30 @@ function HomePage({
 				<div className="container mx-auto md:px-4 xl:px-2">
 					<div className="grid grid-cols-12 gap-x-5">
 						<div className="col-span-12 lg:col-span-3 bg-danger order-last lg:order-first">
-							<div className="sticky top-20">
+							{/* <div className="sticky top-24">
 								<MyFavouriteLeagues />
 								<HotLeagueHome />
 								<LeagueOtherHome />
-							</div>
+							</div> */}
 						</div>
 						<div className="col-span-12 lg:col-span-6">
-							{/* <SlideListMatchesHome
-              setSearchMatch={setSearch}
-              sliderMatches={sliderMatches}
-              setleague={setLeague}
-            /> */}
-							<GetPromotion isMobile />
+							{/* <GetPromotion isMobile />
 
-							<HotLeagueHomeMobile />
+							<HotLeagueHomeMobile /> */}
 
-							<ListMatchesHome
-								search={searchMatch}
-								matchThesport={matchThesport}
-								league={league}
-							/>
+							{/* <ListMatchesHome
+                search={searchMatch}
+                matchThesport={matchThesport}
+                league={league}
+              /> */}
 						</div>
-						<div className="hidden lg:block col-span-12 lg:col-span-3 ">
-							<div className="sticky">
+						{/* <div className="hidden lg:block col-span-12 lg:col-span-3 ">
+							<div className="sticky top-24">
 								<GetPromotion />
 								<ChatRankHome ranks={ranks} home />
 								<UserRankTableV2 />
 							</div>
-						</div>
+						</div> */}
 					</div>
 				</div>
 			</div>
@@ -110,21 +93,16 @@ export default HomePage;
 
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
 	try {
-		const [messageRes, sliderMatchesRes, tipsRes, matchThesport, seo, rank] =
-			await Promise.all([
-				getMessagesHome(1, 100),
-				getCentralPointMatches(1, 400, "1"),
-				getPagingTips(1, 3),
-				getMatchTheSport(),
-				getSeoByLink("/"),
-				getRankTable(),
-			]);
+		const [messageRes, matchThesport, seo, rank] = await Promise.all([
+			getMessagesHome(1, 100),
+			getMatchTheSport(),
+			getSeoByLink("/"),
+			getRankTable(),
+		]);
 
 		return {
 			props: {
 				message: messageRes.data?.result,
-				sliderMatches: sliderMatchesRes.data?.result || [],
-				tips: tipsRes?.data?.result?.result || [],
 				matchThesport: matchThesport.data?.matchThesport || [],
 				tags: seo?.data?.result?.tags || [],
 				ranks: rank?.data?.result?.data || [],
