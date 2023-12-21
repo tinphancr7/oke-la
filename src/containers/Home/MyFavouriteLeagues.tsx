@@ -1,8 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import React, {useContext} from "react";
-import premierleague from "@/assets/images/premier-league.svg";
-import {schedules} from "@/constant";
 import slugify from "slugify";
 import {AuthContext} from "@/context/AuthContext";
 
