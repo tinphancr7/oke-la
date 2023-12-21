@@ -257,7 +257,7 @@ function ListMatchesHome({
 			setUpcomingHotMatches([]);
 			setPageIndex(1);
 			setHotMatch(hotMatchesRes?.data?.result);
-			setTotalPage(caculateTotalPage(hotMatchesRes?.data?.totalDoc, pageSize));
+
 			if (hotMatchesRes.data?.result?.length <= 0) {
 				setHasmore(false);
 			} else {
