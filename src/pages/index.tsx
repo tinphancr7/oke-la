@@ -33,36 +33,18 @@ type Props = {
 	rankUsers: any[];
 };
 
-function HomePage({
-	message,
-	sliderMatches,
-	tips,
-	matchThesport,
-	tags,
-	ranks,
-	rankUsers,
-}: Props) {
-	const dispatch = useAppDispatch();
-	useEffect(() => {
-		if (message) dispatch(initMessageHome(message));
-	}, [message, dispatch]);
-
+function HomePage() {
 	return (
 		<>
-			<Head>
-				{tags?.map((tag, index) => (
-					<React.Fragment key={index}>{parse(tag)}</React.Fragment>
-				))}
-			</Head>
 			<div className="bg-[#EEE] py-7">
 				<div className="container mx-auto md:px-4 xl:px-2">
 					<div className="grid grid-cols-12 gap-x-5">
 						<div className="col-span-12 lg:col-span-3 bg-danger order-last lg:order-first">
-							{/* <div className="sticky top-24">
+							<div className="sticky top-24">
 								<MyFavouriteLeagues />
 								<HotLeagueHome />
 								<LeagueOtherHome />
-							</div> */}
+							</div>
 						</div>
 						<div className="col-span-12 lg:col-span-6">
 							{/* <GetPromotion isMobile />
@@ -90,28 +72,3 @@ function HomePage({
 }
 
 export default HomePage;
-
-export async function getServerSideProps(ctx: GetServerSidePropsContext) {
-	try {
-		const [messageRes, matchThesport, seo, rank] = await Promise.all([
-			getMessagesHome(1, 100),
-			getMatchTheSport(),
-			getSeoByLink("/"),
-			getRankTable(),
-		]);
-
-		return {
-			props: {
-				message: messageRes.data?.result,
-				matchThesport: matchThesport.data?.matchThesport || [],
-				tags: seo?.data?.result?.tags || [],
-				ranks: rank?.data?.result?.data || [],
-			},
-		};
-	} catch (error) {
-		console.log(error);
-		return {
-			props: {},
-		};
-	}
-}
