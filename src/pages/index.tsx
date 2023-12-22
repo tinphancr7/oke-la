@@ -38,7 +38,7 @@ function HomePage() {
 
 							<HotLeagueHomeMobile /> */}
 
-							<ListMatchesHome />
+							{/* <ListMatchesHome /> */}
 						</div>
 						<div className="hidden lg:block col-span-12 lg:col-span-3 ">
 							<div className="sticky top-24">
