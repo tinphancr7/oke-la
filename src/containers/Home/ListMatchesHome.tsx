@@ -445,7 +445,7 @@ function ListMatchesHome() {
 					)}
 				</div>
 			</div>
-			<div className="mt-4 lg:mt-0">{renderTab(tab)}</div>
+			{renderTab(tab)}
 		</>
 	);
 }
