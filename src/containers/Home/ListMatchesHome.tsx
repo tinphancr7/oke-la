@@ -8,15 +8,7 @@ import IconCornerKick from "@/components/icons/CornerKick";
 
 import moment from "moment";
 import {AuthContext} from "@/context/AuthContext";
-import {
-	getFinishedMatchesGroupLeague,
-	getHotMatchesGroupLeague,
-	getHotMatchesGroupLeagueAuth,
-	getMatchesByDateGroupLeague,
-	getMatchesByDateGroupRateLeague,
-	getPlayingMatchGroupLeague,
-	getUpcomingMatchesGroupLeague,
-} from "@/apis/match";
+import {getMatchesByDateGroupLeague} from "@/apis/match";
 import {toast} from "react-toastify";
 import {likeLeague, likeMatch, unLikeMatch, unlikeLeague} from "@/apis/user";
 import {useRouter} from "next/router";
@@ -27,8 +19,6 @@ import ListMatchesHomeMobile from "./ListMatchesHomeMobile";
 import {FaCalendarAlt} from "react-icons/fa";
 import Datetime from "react-datetime";
 import "moment/locale/vi";
-import ListMatchOddHomeItem from "./ListMatchOddHomeItem";
-import ListMatchesOddHomeMobile from "./ListMatchesOddHomeMobile";
 
 const convertDateToVN = (date: string) => {
 	switch (date) {
@@ -510,14 +500,14 @@ function ListMatchesHome() {
 				<div className="mt-4">
 					{(loading ? [] : genDataMatches)?.map((item) => (
 						<>
-							<div className="hidden lg:block">
+							{/* <div className="hidden lg:block">
 								<ListMatchHomeItem
 									isGroup={Boolean(showBy === "league")}
 									matchThesport={[]}
 									matchGroupLeague={item}
 									key={item?._id}
 								/>
-							</div>
+							</div> */}
 							<div className="block lg:hidden">
 								<ListMatchesHomeMobile
 									isGroup={Boolean(showBy === "league")}
