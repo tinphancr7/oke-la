@@ -751,14 +751,14 @@ function ListMatchesHome() {
 								</>
 							) : (
 								<>
-									<div className="hidden lg:block">
+									{/* <div className="hidden lg:block">
 										<ListMatchHomeItem
 											isGroup={Boolean(showBy === "league")}
 											matchThesport={[]}
 											matchGroupLeague={item}
 											key={item?._id}
 										/>
-									</div>
+									</div> */}
 									{/* <div className="block lg:hidden">
 										<ListMatchesHomeMobile
 											isGroup={Boolean(showBy === "league")}
