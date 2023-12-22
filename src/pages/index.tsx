@@ -1,10 +1,25 @@
-import UserRankTableV2 from "@/components/UserRankTableV2";
-import ChatRankHome from "@/containers/Home/ChatRankHome";
-import GetPromotion from "@/containers/Home/GetPromotion";
-import HotLeagueHome from "@/containers/Home/HotLeagueHome";
-import LeagueOtherHome from "@/containers/Home/LeagueOtherHome";
-import ListMatchesHome from "@/containers/Home/ListMatchesHome";
-import MyFavouriteLeagues from "@/containers/Home/MyFavouriteLeagues";
+import dynamic from "next/dynamic";
+// import UserRankTableV2 from "@/components/UserRankTableV2";
+// import ChatRankHome from "@/containers/Home/ChatRankHome";
+// import GetPromotion from "@/containers/Home/GetPromotion";
+// import HotLeagueHome from "@/containers/Home/HotLeagueHome";
+// import LeagueOtherHome from "@/containers/Home/LeagueOtherHome";
+// import ListMatchesHome from "@/containers/Home/ListMatchesHome";
+// import MyFavouriteLeagues from "@/containers/Home/MyFavouriteLeagues";
+
+const UserRankTableV2 = dynamic(() => import("@/components/UserRankTableV2"));
+const ChatRankHome = dynamic(() => import("@/containers/Home/ChatRankHome"));
+const GetPromotion = dynamic(() => import("@/containers/Home/GetPromotion"));
+const HotLeagueHome = dynamic(() => import("@/containers/Home/HotLeagueHome"));
+const LeagueOtherHome = dynamic(
+	() => import("@/containers/Home/LeagueOtherHome")
+);
+const ListMatchesHome = dynamic(
+	() => import("@/containers/Home/ListMatchesHome")
+);
+const MyFavouriteLeagues = dynamic(
+	() => import("@/containers/Home/MyFavouriteLeagues")
+);
 
 function HomePage() {
 	return (
