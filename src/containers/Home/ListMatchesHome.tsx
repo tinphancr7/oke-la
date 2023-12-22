@@ -458,28 +458,7 @@ function ListMatchesHome() {
 
 				{isLoading && <Loading />}
 			</div>
-			{/* filter list matches */}
-			{/* <FilterListMatchesHome
-				listLeague={listLeague as any}
-				onClose={() => setShowFilterLeague(false)}
-				show={showFilterLeague}
-				listChosenLeague={listChosenLeague}
-				onChangeChosenListLeague={handleChangeChosenListLeague}
-				onFilterByLeague={handleFilterByLeague}
-				handleCheckAll={handleCheckAll}
-			/> */}
-			{/* <div className="flex items-center justify-center mt-4">
-				<button
-					onClick={() => handleLoadMore(pageIndex + 1)}
-					type="button"
-					disabled={!hasmore}
-					className={`w-[150px] text-white bg-secondary focus:ring-4 focus:outline-none focus:ring-secondary dark:focus:ring-secondary font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 ${
-						!hasmore ? "opacity-50" : ""
-					}  }`}
-				>
-					<span>Xem Thêm</span>
-				</button>
-			</div> */}
+
 			{listMatches?.length > 0 && (
 				<div className="flex items-center justify-center mt-5">
 					<div className="w-[45%]"></div>

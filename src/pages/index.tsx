@@ -16,7 +16,7 @@ function HomePage() {
 							<div className="sticky top-24">
 								<MyFavouriteLeagues />
 								<HotLeagueHome />
-								<LeagueOtherHome />
+								{/* <LeagueOtherHome /> */}
 							</div>
 						</div>
 						<div className="col-span-12 lg:col-span-6">
