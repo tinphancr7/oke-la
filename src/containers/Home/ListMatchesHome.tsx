@@ -759,7 +759,7 @@ function ListMatchesHome() {
 											key={item?._id}
 										/>
 									</div>
-									<div className="block lg:hidden">
+									{/* <div className="block lg:hidden">
 										<ListMatchesHomeMobile
 											isGroup={Boolean(showBy === "league")}
 											key={item?._id}
@@ -770,7 +770,7 @@ function ListMatchesHome() {
 											handleUnLikeMatch={handleUnLikeMatch}
 											handleNavigate={handleNavigate}
 										/>
-									</div>
+									</div> */}
 								</>
 							)}
 						</>
