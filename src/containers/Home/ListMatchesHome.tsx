@@ -14,6 +14,10 @@ import {FaAngleLeft, FaAngleRight, FaCalendarAlt} from "react-icons/fa";
 import Datetime from "react-datetime";
 import "moment/locale/vi";
 import ListAllMatchHome from "./ListAllMatchHome";
+import ListMatchLiveHome from "./ListMatchLiveHome";
+import ListMatchUpcomingHome from "./ListMatchUpcomingHome";
+import ListMatchFinishHome from "./ListMatchFinishHome";
+import ListMatchOddHome from "./ListMatchOddHome";
 
 const convertDateToVN = (date: string) => {
 	switch (date) {
@@ -33,7 +37,30 @@ const convertDateToVN = (date: string) => {
 			return "CN";
 	}
 };
+const tabs = [
+	{
+		id: 0,
+		title: "TẤT CẢ",
+	},
+	{
+		id: 1,
+		title: "TRỰC TIẾP",
+		isBlink: true,
+	},
+	{
+		id: 2,
+		title: "TỶ LỆ KÈO",
+	},
 
+	{
+		id: 3,
+		title: "SẮP DIỄN RA",
+	},
+	{
+		id: 4,
+		title: "ĐÃ KẾT THÚC",
+	},
+];
 function ListMatchesHome() {
 	const [tab, setTab] = useState(0);
 	const {user, updateAuthUser} = useContext(AuthContext);
@@ -117,30 +144,6 @@ function ListMatchesHome() {
 		}
 	};
 
-	const tabs = [
-		{
-			id: 0,
-			title: "TẤT CẢ",
-		},
-		{
-			id: 1,
-			title: "TRỰC TIẾP",
-			isBlink: true,
-		},
-		{
-			id: 2,
-			title: "TỶ LỆ KÈO",
-		},
-
-		{
-			id: 3,
-			title: "SẮP DIỄN RA",
-		},
-		{
-			id: 4,
-			title: "ĐÃ KẾT THÚC",
-		},
-	];
 	const Loading = () => {
 		return new Array(5).fill(5).map((item) => {
 			return (
@@ -284,6 +287,71 @@ function ListMatchesHome() {
 		});
 	};
 
+	const renderTab = (tab: number) => {
+		switch (tab) {
+			case 1:
+				return (
+					<ListMatchLiveHome
+						date={date}
+						handleLikeLeague={handleLikeLeague}
+						handleUnLikeLeague={handleUnLikeLeague}
+						handleLikeMatch={handleLikeMatch}
+						handleUnLikeMatch={handleUnLikeMatch}
+						handleNavigate={handleNavigate}
+						Loading={Loading}
+					/>
+				);
+			case 2:
+				return (
+					<ListMatchOddHome
+						date={date}
+						handleLikeLeague={handleLikeLeague}
+						handleUnLikeLeague={handleUnLikeLeague}
+						handleLikeMatch={handleLikeMatch}
+						handleUnLikeMatch={handleUnLikeMatch}
+						handleNavigate={handleNavigate}
+						Loading={Loading}
+					/>
+				);
+			case 3:
+				return (
+					<ListMatchUpcomingHome
+						date={date}
+						handleLikeLeague={handleLikeLeague}
+						handleUnLikeLeague={handleUnLikeLeague}
+						handleLikeMatch={handleLikeMatch}
+						handleUnLikeMatch={handleUnLikeMatch}
+						handleNavigate={handleNavigate}
+						Loading={Loading}
+					/>
+				);
+			case 4:
+				return (
+					<ListMatchFinishHome
+						date={date}
+						handleLikeLeague={handleLikeLeague}
+						handleUnLikeLeague={handleUnLikeLeague}
+						handleLikeMatch={handleLikeMatch}
+						handleUnLikeMatch={handleUnLikeMatch}
+						handleNavigate={handleNavigate}
+						Loading={Loading}
+					/>
+				);
+			default:
+				return (
+					<ListAllMatchHome
+						date={date}
+						handleLikeLeague={handleLikeLeague}
+						handleUnLikeLeague={handleUnLikeLeague}
+						handleLikeMatch={handleLikeMatch}
+						handleUnLikeMatch={handleUnLikeMatch}
+						handleNavigate={handleNavigate}
+						Loading={Loading}
+					/>
+				);
+		}
+	};
+
 	return (
 		<>
 			<div
@@ -325,9 +393,7 @@ function ListMatchesHome() {
 								locale="vi"
 								dateFormat="DD/MM ddd"
 								timeFormat={false}
-								onChange={(value) =>
-									!isLoading && setDate(moment(value).toDate())
-								}
+								onChange={(value) => setDate(moment(value).toDate())}
 								renderMonth={(props, month, year, selectedDate) => (
 									<td
 										{...props}
@@ -347,7 +413,6 @@ function ListMatchesHome() {
 											<span
 												className="cursor-pointer hidden lg:inline"
 												onClick={() =>
-													!isLoading &&
 													setDate(moment(date).add(-1, "day").toDate())
 												}
 											>
@@ -367,7 +432,6 @@ function ListMatchesHome() {
 											<span
 												className="cursor-pointer hidden lg:inline"
 												onClick={() =>
-													!isLoading &&
 													setDate(moment(date).add(1, "day").toDate())
 												}
 											>
@@ -381,15 +445,7 @@ function ListMatchesHome() {
 					)}
 				</div>
 			</div>
-			<ListAllMatchHome
-				date={date}
-				handleLikeLeague={handleLikeLeague}
-				handleUnLikeLeague={handleUnLikeLeague}
-				handleLikeMatch={handleLikeMatch}
-				handleUnLikeMatch={handleUnLikeMatch}
-				handleNavigate={handleNavigate}
-				Loading={Loading}
-			/>
+			<div className="mt-4 lg:mt-0">{renderTab(tab)}</div>
 		</>
 	);
 }
