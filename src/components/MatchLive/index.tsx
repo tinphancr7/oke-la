@@ -18,17 +18,14 @@ import moment from "moment";
 import {axiosInstanceISport} from "@/apis";
 import {SocketContext} from "@/context/SocketContext";
 import {AuthContext} from "@/context/AuthContext";
-
-import ImageWithFallback from "../imageWithFallback";
-import {getVoteByMatchId, unVote, vote as voteMatch} from "@/apis/vote";
-import {toast} from "react-toastify";
 import EmojiPicker from "emoji-picker-react";
 import Auth from "@/layouts/Auth";
 import {BsChatFill} from "react-icons/bs";
 const ReactHlsPlayer = dynamic(import("react-hls-player"), {ssr: false});
-import {IoIosArrowForward} from "react-icons/io";
-import {MdKeyboardDoubleArrowRight, MdOutlinePercent} from "react-icons/md";
 import Statistic from "../statistic/Statistic";
+import {useMutation, useQuery} from "@tanstack/react-query";
+import axios from "axios";
+import {getEvent} from "@/apis/match";
 const NoteItem = ({item}: {item: any}) => {
 	return (
 		<div className="flex items-center gap-2">
@@ -44,23 +41,7 @@ const NoteItem = ({item}: {item: any}) => {
 	);
 };
 
-const MatchLive = ({
-	matchIdLive,
-	match,
-	event,
-	matchAnalysis,
-	room,
-	messages,
-	matchDetail,
-}: {
-	matchIdLive: string;
-	match: IHotMatch;
-	event: any[];
-	matchAnalysis: any;
-	room: any;
-	messages: IMessage[];
-	matchDetail: any;
-}) => {
+const MatchLive = ({match, matchId, room, messages}: any) => {
 	const renderEvent = (
 		type: number,
 		player: string,
@@ -138,9 +119,29 @@ const MatchLive = ({
 	const {user, setIsOpen} = useContext(AuthContext);
 	const socket: any = useContext(SocketContext);
 	const [showEmoji, setShowEmoji] = useState(false);
-	const [vote, setVote] = useState<IVote>();
 	const [hiddenChat, setHiddenChat] = useState(false);
+	const [linkLive, setLinkLive] = useState<string>("");
 
+	const {data} = useQuery({
+		queryKey: ["events"],
+		queryFn: () => getEvent(matchId.toString()),
+		enabled: !!matchId,
+	});
+	const event = data?.data?.[0]?.events;
+	const liveStreamMutation = useMutation({
+		mutationFn: (matchId: string) =>
+			axios.post(`https://api.553328.com/api/match-detail?matchId=${matchId}`),
+		onSuccess: (data) => {
+			setLinkLive(data?.data?.value?.datas?.linkLive);
+		},
+	});
+
+	const handleLiveStream = () => {
+		liveStreamMutation.mutate(matchId);
+	};
+	useEffect(() => {
+		matchId && handleLiveStream();
+	}, [matchId]);
 	const handleSendMessage = async () => {
 		try {
 			if (!content?.trim()) return;
@@ -161,6 +162,7 @@ const MatchLive = ({
 	};
 	return (
 		<>
+			{" "}
 			<div
 				className={`match-live-layout grid lg:grid-cols-4 w-full mb-4 gap-4`}
 			>
@@ -180,7 +182,7 @@ const MatchLive = ({
 						<>
 							<ReactHlsPlayer
 								playerRef={playRef}
-								src={`${matchDetail?.linkLive || matchDetail?.linkLiveFlv}`}
+								src={linkLive}
 								width="100%"
 								height="100%"
 								autoPlay={true}
@@ -287,22 +289,22 @@ const MatchLive = ({
 						<div className="match-live-video-event-team flex py-2 px-4 justify-between bg-[#FFAD01]">
 							<div className="match-live-video-event-team-home flex items-center gap-4">
 								<Image
-									src={match.homeIcon || LOGO_DEFAULT}
+									src={match?.homeIcon || LOGO_DEFAULT}
 									alt="logo-home"
 									width={32}
 									height={32}
 									className="lg:w-[56px] lg:h-[56px]"
 								/>
 								<p className="font-bold text-md lg:text-[18px]">
-									{match.homeName}
+									{match?.homeName}
 								</p>
 							</div>
 							<div className="match-live-video-event-team-away flex items-center gap-4">
 								<p className="text-md lg:text-[18px] font-bold">
-									{match.awayName}
+									{match?.awayName}
 								</p>
 								<Image
-									src={match.awayIcon || LOGO_DEFAULT}
+									src={match?.awayIcon || LOGO_DEFAULT}
 									alt="logo-home"
 									width={32}
 									height={32}
@@ -314,11 +316,11 @@ const MatchLive = ({
 							<div className="flex mt-8 justify-center">
 								<div className="match-live-video-event-status py-2 px-8">
 									<p className="text-[18px] font-bold text-center">
-										{matchStatus[match.status?.toString()]}
+										{matchStatus[match?.status?.toString()]}
 									</p>
 									<p className="text-[18px] font-bold text-center text-time-red">
-										{isPlayingMatches(match.status) || match.status == -1
-											? `${match.homeScore} - ${match.awayScore}`
+										{isPlayingMatches(match?.status) || match?.status == -1
+											? `${match?.homeScore} - ${match?.awayScore}`
 											: "? - ?"}
 									</p>
 								</div>
@@ -359,24 +361,24 @@ const MatchLive = ({
 					<p className="text-secondary text-[18px] font-bold">Thống kê</p>
 					<p className="text-[16px] font-bold mt-2">Giới thiệu trận đấu: </p>
 					<p className="text-[16px] mt-2">
-						Tý số trực tiếp {match.homeName} vs {match.awayName} (và phát trực
+						Tý số trực tiếp {match?.homeName} vs {match?.awayName} (và phát trực
 						tiếp video trực tiếp) bắt đầu vào{" "}
-						{moment(match.matchTime * 1000).format("DD/MM/YYYY HH:mm A")} ở Giải{" "}
-						{match?.leagueName}. Tại đây trên livescore
-						{match.homeName} vs {match.awayName}, bạn có thể tìm thấy tất cả các
-						kết quả {match.homeName} vs {match.awayName} trước đó được sắp xếp
-						theo các trận đấu H2H của họ
+						{moment(match?.matchTime * 1000).format("DD/MM/YYYY HH:mm A")} ở
+						Giải {match?.leagueName}. Tại đây trên livescore
+						{match?.homeName} vs {match?.awayName}, bạn có thể tìm thấy tất cả
+						các kết quả {match?.homeName} vs {match?.awayName} trước đó được sắp
+						xếp theo các trận đấu H2H của họ
 					</p>
 					<p className="text-[16px] font-bold mt-2">Chi tiết trận đấu: </p>
 					<p className="text-[16px]  mt-2">
 						Sự kiện: Giải {match?.leagueName}.
 					</p>
 					<p className="text-[16px]  mt-1">
-						Tên: {match.homeName} vs {match.awayName}
+						Tên: {match?.homeName} vs {match?.awayName}
 					</p>
 					<p className="text-[16px]  mt-1">
 						Thời gian:{" "}
-						{moment(match.matchTime * 1000).format("DD/MM/YYYY HH:mm A")}
+						{moment(match?.matchTime * 1000).format("DD/MM/YYYY HH:mm A")}
 					</p>
 					Sân vận động: {match?.location}
 				</div>

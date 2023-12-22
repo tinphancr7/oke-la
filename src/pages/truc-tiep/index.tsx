@@ -1,76 +1,68 @@
 import {getHotMatch, getPlayingMatches} from "@/apis/match";
 import Heading from "@/components/heading/Heading";
 import HotMatch from "@/components/hotMatch";
-import {IHotMatch, IMatch} from "@/interfaces";
-import {GetServerSidePropsContext} from "next";
 import Image from "next/image";
 import {LOGO_DEFAULT, matchStatus} from "../../constant";
 import moment from "moment";
 import Link from "next/link";
 import {generateMatchTime, isPlayingMatches} from "@/utils";
-import {getSeoByLink} from "@/apis/seo";
-import Head from "next/head";
 import React, {useMemo, useState} from "react";
-import parse from "html-react-parser";
-import {useDebounce} from "@/utils/useDebounce";
 
-const Live = ({
-	matches,
-	playingMatches,
-	tags,
-}: {
-	matches: IMatch[];
-	playingMatches: IMatch[];
-	tags: string[];
-}) => {
-	const [allMatches, setAllMatches] = useState(playingMatches);
+import {useDebounce} from "@/utils/useDebounce";
+import {useQuery} from "@tanstack/react-query";
+
+const Live = () => {
 	const [searchMatch, setSearchMatch] = useState("");
 	const searchValue = useDebounce(searchMatch, 500);
 
-	const data = useMemo(() => {
-		if (searchValue) {
-			return playingMatches
-				?.filter(
-					(item) =>
-						item?.homeName
-							?.toLowerCase()
-							.includes(searchValue?.toLowerCase()) ||
-						item?.awayName?.toLowerCase().includes(searchValue?.toLowerCase())
-				)
-				?.sort((a, b) => {
-					const hotA = a?.isHot ? 2 : 1;
-					const hotB = b?.isHot ? 2 : 1;
-					const liveA = [1, 2, 3, 4].includes(a?.status) ? 3 : 1;
-					const liveB = [1, 2, 3, 4].includes(b?.status) ? 3 : 1;
-					const timeA = a?.matchTime < b?.matchTime ? 1 : 0;
-					const timeB = b?.matchTime < a?.matchTime ? 1 : 0;
-					return hotB + liveB - timeB - (hotA + liveA + timeA);
-				});
-		}
-		return playingMatches?.sort((a, b) => {
-			const hotA = a?.isHot ? 2 : 1;
-			const hotB = b?.isHot ? 2 : 1;
-			const liveA = [1, 2, 3, 4].includes(a?.status) ? 3 : 1;
-			const liveB = [1, 2, 3, 4].includes(b?.status) ? 3 : 1;
-			const timeA = a?.matchTime < b?.matchTime ? 1 : 0;
-			const timeB = b?.matchTime < a?.matchTime ? 1 : 0;
-			return hotB + liveB - timeB - (hotA + liveA + timeA);
-		});
-	}, [playingMatches, searchValue]);
+	// 	if (searchValue) {
+	// 		return playingMatches
+	// 			?.filter(
+	// 				(item) =>
+	// 					item?.homeName
+	// 						?.toLowerCase()
+	// 						.includes(searchValue?.toLowerCase()) ||
+	// 					item?.awayName?.toLowerCase().includes(searchValue?.toLowerCase())
+	// 			)
+	// 			?.sort((a, b) => {
+	// 				const hotA = a?.isHot ? 2 : 1;
+	// 				const hotB = b?.isHot ? 2 : 1;
+	// 				const liveA = [1, 2, 3, 4].includes(a?.status) ? 3 : 1;
+	// 				const liveB = [1, 2, 3, 4].includes(b?.status) ? 3 : 1;
+	// 				const timeA = a?.matchTime < b?.matchTime ? 1 : 0;
+	// 				const timeB = b?.matchTime < a?.matchTime ? 1 : 0;
+	// 				return hotB + liveB - timeB - (hotA + liveA + timeA);
+	// 			});
+	// 	}
+	// 	return playingMatches?.sort((a, b) => {
+	// 		const hotA = a?.isHot ? 2 : 1;
+	// 		const hotB = b?.isHot ? 2 : 1;
+	// 		const liveA = [1, 2, 3, 4].includes(a?.status) ? 3 : 1;
+	// 		const liveB = [1, 2, 3, 4].includes(b?.status) ? 3 : 1;
+	// 		const timeA = a?.matchTime < b?.matchTime ? 1 : 0;
+	// 		const timeB = b?.matchTime < a?.matchTime ? 1 : 0;
+	// 		return hotB + liveB - timeB - (hotA + liveA + timeA);
+	// 	});
+	// }, [playingMatches, searchValue]);
+	const {data: hotMatches} = useQuery({
+		queryKey: ["hot-matches"],
+		queryFn: () => getHotMatch(),
+	});
+	const {data: playingMatchesData} = useQuery({
+		queryKey: ["playing-matches"],
+		queryFn: () => getPlayingMatches(50, 1),
+	});
 
+	const hotMatchesData = hotMatches?.data?.result;
+	const playingMatches = playingMatchesData?.data?.result;
 	return (
 		<>
-			<Head>
-				{tags?.map((tag, index) => (
-					<React.Fragment key={index}>{parse(tag)}</React.Fragment>
-				))}
-			</Head>
 			<div className="mt-6 xl:container mx-auto md:px-4 xl:px-2">
 				<h1 className="text-secondary text-3xl font-bold text-bigger uppercase text-center">
 					Trận cầu đáng xem
 				</h1>
 				<div className="mt-6">
-					<HotMatch matches={(matches as any) || []} />
+					<HotMatch matches={(hotMatchesData as any) || []} />
 				</div>
 				<div className="flex flex-col items-center mt-8 pb-5 justify-between">
 					<div className="text-center w-full">
@@ -105,9 +97,9 @@ const Live = ({
 						/>
 					</div>
 				</div>
-				{data?.length ? (
-					<div className="grid grid-cols-4 md:grid-cols-8 lg:grid-cols-12 gap-5">
-						{data?.map((item: any, index) => (
+				{playingMatches?.length ? (
+					<div className="grid grid-cols-4 md:grid-cols-8 lg:grid-cols-12 gap-5 mb-5">
+						{playingMatches?.map((item: any, index) => (
 							<div key={index} className="col-span-4">
 								<Link href={`/truc-tiep/${item.matchId}`}>
 									<div
@@ -210,102 +202,6 @@ const Live = ({
 												</div>
 											</div>
 										</div>
-										{/* <div className="button-footer flex justify-end gap-2 border-t-2 p-2">
-                      <Link href={`/truc-tiep/${item?.matchId}`}>
-                        <div
-                          className="py-1 px-2 bg-white text-black rounded-lg shadow-md text-[15px]"
-                          style={{ border: "1px solid rgb(14,116,144)" }}
-                        >
-                          Trực tiếp
-                        </div>
-                      </Link>
-                      <Link href={`/truc-tiep/${item?.matchId}`}>
-                        <div className="py-1 px-2 bg-secondary text-white rounded-lg  text-[15px]">
-                          Cược ngay
-                        </div>
-                      </Link>
-                    </div> */}
-
-										{/* <div className="px-4 py-2 bg-white">
-                  <div className="flex items-start">
-                    <div className="w-[45%]">
-                      <div className="text-xs flex flex-col">
-                        <h4 className="text-secondary text-xs font-semibold text-center pb-2">
-                          Cược chấp
-                        </h4>
-                        <div className="flex items-center justify-between bg-[#EDEDED] p-1 mb-1.5">
-                          <span className="font-normal">
-                            H{" "}
-                            {convertToOdd(
-                              convertStringOddToArray(item?.handicap)?.[5]
-                            )}
-                          </span>
-                          <span className="font-semibold">
-                            {" "}
-                            {convertStringOddToArray(item?.handicap)?.[6]
-                              ? convertStringOddToArray(item?.handicap)?.[6]
-                              : "-"}
-                          </span>
-                        </div>
-                        <div className="flex items-center justify-between bg-[#EDEDED] p-1">
-                          <span className="font-normal">A </span>
-                          <span className="font-semibold">
-                            {convertStringOddToArray(item?.handicap)?.[7]
-                              ? convertStringOddToArray(item?.handicap)?.[7]
-                              : "-"}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="w-[10%] px-4">
-                      <div className="flex items-center justify-center">
-                        <div className="w-6 h-6 relative flex-shrink-0">
-                          <Image
-                            src="/images/play.png"
-                            className="w-full h-full object-fill"
-                            fill
-                            alt="play"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="w-[50%]">
-                      <div className="text-xs flex flex-col text-center">
-                        <h4 className="text-secondary text-xs font-semibold pb-2">
-                          Tài xỉu
-                        </h4>
-                        <div className="flex items-center justify-between bg-[#EDEDED] p-1 mb-1.5">
-                          <span className="font-normal">
-                            o{" "}
-                            {convertToOdd(
-                              convertStringOddToArray(item?.overUnder)?.[5]
-                            )}
-                          </span>
-                          <span className="font-semibold">
-                            {" "}
-                            {convertStringOddToArray(item?.overUnder)?.[6]
-                              ? convertStringOddToArray(item?.overUnder)?.[6]
-                              : "-"}
-                          </span>
-                        </div>
-                        <div className="flex items-center justify-between bg-[#EDEDED] p-1">
-                          <span className="font-normal">
-                            u{" "}
-                            {convertToOdd(
-                              convertStringOddToArray(item?.overUnder)?.[5]
-                            )}
-                          </span>
-                          <span className="font-semibold">
-                            {" "}
-                            {convertStringOddToArray(item?.overUnder)?.[7]
-                              ? convertStringOddToArray(item?.overUnder)?.[7]
-                              : "-"}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div> */}
 									</div>
 								</Link>
 							</div>
@@ -322,31 +218,3 @@ const Live = ({
 };
 
 export default Live;
-
-export async function getServerSideProps(ctx: GetServerSidePropsContext) {
-	try {
-		const pageSize = ctx.query?.pageSize ? Number(ctx.query?.pageSize) : 500;
-		const pageIndex = ctx.query?.pageIndex ? Number(ctx.query?.pageIndex) : 1;
-
-		const result = await getHotMatch();
-		const resultPlaying = await getPlayingMatches(pageSize, pageIndex);
-		const seo = await getSeoByLink("/truc-tiep");
-
-		return {
-			props: {
-				matches: result.data?.result || [],
-				playingMatches: resultPlaying.data.result || [],
-				tags: seo?.data?.result?.tags || [],
-			},
-		};
-	} catch (error) {
-		console.log(error);
-		return {
-			props: {
-				matches: [],
-				playingMatches: [],
-				tags: [],
-			},
-		};
-	}
-}

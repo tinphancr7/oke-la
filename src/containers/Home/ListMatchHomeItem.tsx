@@ -1,32 +1,22 @@
 import {likeLeague, likeMatch, unLikeMatch, unlikeLeague} from "@/apis/user";
 import ButtonOnlyIcon from "@/components/button/ButtonOnlyIcon";
-import IconCaretDown from "@/components/icons/CaretDown";
-import IconChartLine from "@/components/icons/ChartLine";
 import IconCornerKick from "@/components/icons/CornerKick";
-import IconFlag from "@/components/icons/Flag";
-import IconLive from "@/components/icons/Live";
 import IconStar from "@/components/icons/Star";
-import IconTShirt from "@/components/icons/TShirt";
 import LiveMatchTime from "@/components/renderLiveMatchTime";
 import {AuthContext} from "@/context/AuthContext";
 import {IMatch, IMatchGroupLeague} from "@/interfaces";
-import {
-	converToTheSportId,
-	convertStringOddToArray,
-	convertToOdd,
-	isPlayingMatches,
-} from "@/utils";
+import {converToTheSportId, isPlayingMatches} from "@/utils";
 import moment from "moment";
 import Link from "next/link";
 import {useRouter} from "next/router";
 import React, {useContext, useState} from "react";
 import {AiFillStar} from "react-icons/ai";
 import {toast} from "react-toastify";
-import BoxOddMatchHome from "./BoxOddMatchHome";
 import Image from "next/image";
-import BoxAnimation from "@/components/boxAnimation";
-import {Tooltip} from "antd";
 import slugify from "slugify";
+import {useQueryClient} from "@tanstack/react-query";
+import {getEvent, getMatchById} from "@/apis/match";
+import StatsApi from "@/apis/statistic.api";
 
 interface IMatchWithOdds extends IMatch {
 	handicap: string;
@@ -42,6 +32,21 @@ const MatchHomeItem = ({
 }) => {
 	const {user, updateAuthUser} = useContext(AuthContext);
 	const router = useRouter();
+	const queryClient = useQueryClient();
+	const prefetchingData = async (matchId: any) => {
+		await queryClient.prefetchQuery({
+			queryKey: ["match", matchId],
+			queryFn: () => getMatchById(matchId as any),
+		});
+		await queryClient.prefetchQuery({
+			queryKey: ["events"],
+			queryFn: () => getEvent(matchId.toString()),
+		});
+		await queryClient.prefetchQuery({
+			queryKey: ["stats", matchId],
+			queryFn: () => StatsApi.getMatchStats(matchId),
+		});
+	};
 
 	const handleLikeMatch = async (matchId: string) => {
 		try {
@@ -84,7 +89,10 @@ const MatchHomeItem = ({
 	};
 
 	return (
-		<div className="bg-white px-4 py-2 w-full flex items-center justify-between border-t">
+		<div
+			className="bg-white px-4 py-2 w-full flex items-center justify-between border-t"
+			onMouseMove={() => prefetchingData(match?.matchId)}
+		>
 			<div
 				className="flex items-center justify-between gap-x-2"
 				style={{width: "calc(100% - 100px)"}}

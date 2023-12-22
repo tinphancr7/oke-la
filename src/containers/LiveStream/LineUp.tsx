@@ -1,35 +1,19 @@
 import {getLineUpById} from "@/apis/match";
 import ImageWithFallback from "@/components/imageWithFallback";
-import {LOGO_DEFAULT} from "@/constant";
-import {IHotMatch, ILineup, ILineupItem} from "@/interfaces";
 import {genShortPlayerName} from "@/utils";
+import {useQuery} from "@tanstack/react-query";
 import {GetServerSidePropsContext} from "next";
 import Image from "next/image";
 import React, {useCallback} from "react";
 
-const PlayerItem = ({item, isAway = false}: {item: any; isAway?: boolean}) => {
-	return (
-		<div className="flex flex-col items-center min-w-[100px]">
-			<div
-				className={`w-[42px] h-[42px] rounded-full ${
-					isAway ? "bg-secondary" : "bg-primary"
-				} flex items-center justify-center font-semibold text-white border-2 border-white`}
-			>
-				{item?.number}
-			</div>
-			<div className="text-white text-sm mt-1 font-semibold">
-				{genShortPlayerName(item?.name)}
-			</div>
-		</div>
-	);
-};
+function LineUp({matchId}: any) {
+	const {data} = useQuery({
+		queryKey: ["lineUp", matchId],
+		queryFn: () => getLineUpById(matchId),
+		enabled: !!matchId,
+	});
+	const lineup = data?.data;
 
-type Props = {
-	match: IHotMatch;
-	lineup: any;
-};
-
-function LineUp({match, lineup}: Props) {
 	const genDataByPosition = useCallback(
 		(attr: "homeLineup" | "awayLineup") => {
 			const listPosition = new Set(
@@ -60,7 +44,7 @@ function LineUp({match, lineup}: Props) {
 		},
 		[lineup]
 	);
-	console.log("dsd", genDataByPosition("homeLineup")?.result);
+
 	return (
 		<section>
 			{/* <h4 className="text-secondary font-bold text-xl">Đội hình xuất phát</h4> */}
@@ -341,130 +325,8 @@ function LineUp({match, lineup}: Props) {
 					))}
 				</div>
 			)}
-
-			{/* <div className="mt-4 lineup-wrapper block md:flex items-center md:px-[2rem] lg:px-[7rem]">
-        <div className="flex-1 h-1/2 md:h-full">
-          <div className="flex justify-between flex-col md:flex-row pt-16 md:pt-0 md:pr-8 lg:pr-12 h-full">
-            {Object.values(genDataByPosition("homeLineup"))?.map(
-              (item: any, index) => (
-                <div
-                  key={index}
-                  className="flex flex-row md:flex-col justify-evenly h-full"
-                >
-                  {item?.map((e: any) => (
-                    <PlayerItem key={item?.playerId} item={e} />
-                  ))}
-                </div>
-              )
-            )}
-          </div>
-        </div>
-        <div className="flex-1 h-1/2 md:h-full">
-          <div className="flex flex-col-reverse md:flex-row-reverse justify-between pt-8 md:pt-0 md:pl-8 lg:pl-12 h-full">
-            {Object.values(genDataByPosition("awayLineup"))?.map(
-              (item: any, index) => (
-                <div
-                  key={index}
-                  className="flex flex-row md:flex-col justify-evenly h-full"
-                >
-                  {item?.map((e: any) => (
-                    <PlayerItem isAway key={item?.playerId} item={e} />
-                  ))}
-                </div>
-              )
-            )}
-          </div>
-        </div>
-      </div>
-
-      <h4 className="text-secondary font-bold text-xl mt-8">Đội hình dự bị</h4>
-      <div className="mt-4 md:flex gap-x-5">
-        <div className="flex-1">
-          <table className="w-full rounded-t-2xl">
-            <thead>
-              <tr className="bg-light border-light border">
-                <td className="pl-4 py-2 flex items-center gap-x-2">
-                  <Image
-                    src={match.homeIcon || LOGO_DEFAULT}
-                    alt="logo-home"
-                    width={36}
-                    height={36}
-                  />
-                  <div className="font-bold text-md">{lineup?.homeName}</div>
-                </td>
-                <td className="pr-4 py-2 text-right">
-                  <div className="font-bold text-sm">-</div>
-                  <div className="text-xs">Huấn luyện viên</div>
-                </td>
-              </tr>
-            </thead>
-            <tbody className="border">
-              {lineup?.data?.[0]?.homeBackup?.map((item: any) => (
-                <tr key={item?.playerId} className="border-t">
-                  <td className="pl-4 py-3 flex items-center gap-x-2">
-                    <div className="font-bold text-md">{item?.number}</div>
-                    <div className="font-semibold text-md">{item?.name}</div>
-                  </td>
-                  <td></td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <div className="flex-1">
-          <table className="w-full rounded-t-2xl">
-            <thead>
-              <tr className="bg-light border-light border">
-                <td className="pl-4 py-2 flex items-center gap-x-2">
-                  <Image
-                    src={match.awayIcon || LOGO_DEFAULT}
-                    alt="logo-home"
-                    width={36}
-                    height={36}
-                  />
-                  <div className="font-bold text-md">{lineup?.awayName}</div>
-                </td>
-                <td className="pr-4 py-2 text-right">
-                  <div className="font-bold text-sm">-</div>
-                  <div className="text-xs">Huấn luyện viên</div>
-                </td>
-              </tr>
-            </thead>
-            <tbody className="border">
-              {lineup?.data?.[0]?.awayBackup?.map((item: any) => (
-                <tr key={item?.playerId} className="border-t">
-                  <td className="pl-4 py-3 flex items-center gap-x-2">
-                    <div className="font-bold text-md">{item?.number}</div>
-                    <div className="font-semibold text-md">{item?.name}</div>
-                  </td>
-                  <td></td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div> */}
 		</section>
 	);
 }
 
 export default LineUp;
-
-export async function getServerSideProps(ctx: GetServerSidePropsContext) {
-	try {
-		const matchId = ctx.query.matchId;
-
-		const [lineUpRes] = await Promise.all([
-			getLineUpById((matchId as string) || ""),
-		]);
-
-		return {
-			props: {},
-		};
-	} catch (error) {
-		console.log(error);
-		return {
-			props: {},
-		};
-	}
-}

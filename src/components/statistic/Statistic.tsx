@@ -1,4 +1,5 @@
 import StatsApi from "@/apis/statistic.api";
+import {useQuery} from "@tanstack/react-query";
 import Image from "next/image";
 import React, {useEffect, useState} from "react";
 import {IoIosArrowForward} from "react-icons/io";
@@ -58,19 +59,15 @@ const statistics = [
 	},
 ];
 const Statistic = ({matchId}: any) => {
-	const [stats, setStats] = useState<any>(null);
-
-	useEffect(() => {
-		const getStats = async () => {
-			const res = await StatsApi.getMatchStats(matchId);
-			const newData: any = {};
-			res?.data?.data?.stats?.forEach((item: any) => {
-				newData[item.type] = item;
-			});
-			setStats(newData);
-		};
-		getStats();
-	}, [matchId]);
+	const {data} = useQuery({
+		queryKey: ["stats", matchId],
+		queryFn: () => StatsApi.getMatchStats(matchId),
+		enabled: !!matchId,
+	});
+	const stats: any = {};
+	const newData = data?.data?.data?.stats?.forEach((item: any) => {
+		stats[item.type] = item;
+	});
 
 	return (
 		<div className="bg-[#F1F1F1] w-full p-2 lg:p-5 rounded-lg shadow-lg border  ">

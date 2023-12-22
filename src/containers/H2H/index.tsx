@@ -1,36 +1,39 @@
 import {LOGO_DEFAULT} from "@/constant";
-import {IHotMatch} from "@/interfaces";
 import moment from "moment";
 import React, {useMemo, useState} from "react";
 import H2HItem from "./H2HItem";
 import {countWinLose} from "@/helper";
+import {useQuery} from "@tanstack/react-query";
+import {getMatchAnalysisGroupLeague} from "@/apis/match";
+import Image from "next/image";
 
-type Props = {
-	matchAnalysis: any;
-	match: IHotMatch;
-};
+const H2H = ({matchId, match}: any) => {
+	const {data} = useQuery({
+		queryKey: ["h2h"],
+		queryFn: () => getMatchAnalysisGroupLeague(matchId.toString()),
+		enabled: !!matchId,
+	});
+	const h2hData = data?.data;
 
-const H2H = (props: Props) => {
-	const [radioValue, setRadioValue] = useState(0);
 	const [tab, setTab] = useState("H2H");
 
 	const genTabMobile = useMemo(() => {
-		return ["H2H", props?.match?.homeName, props?.match?.awayName];
-	}, [props.match]);
+		return ["H2H", match?.homeName, match?.awayName];
+	}, [match?.homeName, match?.awayName]);
 
-	const headToHeadCount = countWinLose(props.matchAnalysis?.headToHead);
+	const headToHeadCount = countWinLose(h2hData?.headToHead);
 
-	const homeCount = countWinLose(props.matchAnalysis?.homeLastMatches);
+	const homeCount = countWinLose(h2hData?.homeLastMatches);
 
-	const awayCount = countWinLose(props.matchAnalysis?.awayLastMatches);
+	const awayCount = countWinLose(h2hData?.awayLastMatches);
 
 	const renderByTab = useMemo(() => {
 		if (tab === "H2H")
 			return (
 				<H2HItem
 					title="H2H"
-					lastMatches={props.matchAnalysis?.headToHead}
-					groupLeague={props.matchAnalysis?.listHeadToHeadGroupLeague}
+					lastMatches={h2hData?.headToHead}
+					groupLeague={h2hData?.listHeadToHeadGroupLeague}
 					indexHomeIcon={34}
 					indexAwayIcon={35}
 					count={{
@@ -41,12 +44,12 @@ const H2H = (props: Props) => {
 					checkMatchStatusAttr="homeId"
 				/>
 			);
-		if (tab === props?.match?.homeName)
+		if (tab === match?.homeName)
 			return (
 				<H2HItem
-					title={props.match?.homeName}
-					lastMatches={props.matchAnalysis?.homeLastMatches}
-					groupLeague={props.matchAnalysis?.listHomeLastMatchesGroupLeague}
+					title={match?.homeName}
+					lastMatches={h2hData?.homeLastMatches}
+					groupLeague={h2hData?.listHomeLastMatchesGroupLeague}
 					indexHomeIcon={35}
 					indexAwayIcon={36}
 					count={{
@@ -58,12 +61,12 @@ const H2H = (props: Props) => {
 				/>
 			);
 
-		if (tab === props?.match?.awayName)
+		if (tab === match?.awayName)
 			return (
 				<H2HItem
-					title={props.match?.awayName}
-					lastMatches={props.matchAnalysis?.awayLastMatches}
-					groupLeague={props.matchAnalysis?.listAwayLastMatchesGroupLeague}
+					title={match?.awayName}
+					lastMatches={h2hData?.awayLastMatches}
+					groupLeague={h2hData?.listAwayLastMatchesGroupLeague}
 					indexHomeIcon={35}
 					indexAwayIcon={36}
 					count={{
@@ -74,7 +77,7 @@ const H2H = (props: Props) => {
 					checkMatchStatusAttr="awayId"
 				/>
 			);
-	}, [tab, props]);
+	}, [tab]);
 
 	const checkMatchStatus = (
 		firstTeam: number,
@@ -82,7 +85,6 @@ const H2H = (props: Props) => {
 		teamId: number,
 		homeNumber: number
 	) => {
-		console.log(firstTeam, secondTeam, teamId, homeNumber);
 		if (firstTeam > secondTeam && teamId == homeNumber) {
 			return "W";
 		} else if (firstTeam < secondTeam && teamId != homeNumber) {
@@ -130,12 +132,14 @@ const H2H = (props: Props) => {
 							<p>Số Trận gần nhất</p>
 							<div className="w-12 h-[29px] px-2 py-1 bg-amber-500 rounded-lg shadow border border-neutral-200 justify-center items-center gap-2 inline-flex">
 								<div className="text-center text-white text-sm font-normal leading-[21px]">
-									{props.matchAnalysis?.headToHead?.length || 0}
+									{h2hData?.headToHead?.length || 0}
 								</div>
-								<img
-									className="w-4 h-4 relative"
+								<Image
+									className=" relative"
 									src="/images/arrow-down.svg"
 									alt=""
+									width={16}
+									height={16}
 								/>
 							</div>
 						</div>
@@ -149,8 +153,8 @@ const H2H = (props: Props) => {
 									</div>
 									<span className="text-center text-black text-sm font-normal leading-[21px]">
 										x{" "}
-										{headToHeadCount[props.match?.homeId]?.homeWins +
-											headToHeadCount[props.match?.homeId]?.awayWins}
+										{headToHeadCount[match?.homeId]?.homeWins +
+											headToHeadCount[match?.homeId]?.awayWins}
 									</span>
 								</div>
 							</div>
@@ -163,8 +167,8 @@ const H2H = (props: Props) => {
 									</div>
 									<span className="text-center text-black text-sm font-normal leading-[21px]">
 										x
-										{headToHeadCount[props.match?.homeId]?.homeDraws +
-											headToHeadCount[props.match?.homeId]?.awayDraws}
+										{headToHeadCount[match?.homeId]?.homeDraws +
+											headToHeadCount[match?.homeId]?.awayDraws}
 									</span>
 								</div>
 							</div>
@@ -177,19 +181,17 @@ const H2H = (props: Props) => {
 									</div>
 									<span className="text-center text-black text-sm font-normal leading-[21px]">
 										x
-										{headToHeadCount[props.match?.homeId]?.homeLosses +
-											headToHeadCount[props.match?.homeId]?.awayLosses}
+										{headToHeadCount[match?.homeId]?.homeLosses +
+											headToHeadCount[match?.homeId]?.awayLosses}
 									</span>
 								</div>
 							</div>
 						</div>
 					</div>
 					<div className="w-full mt-4 flex rounded-2xl shadow border border-neutral-200 flex-col justify-start items-start">
-						{Object.keys(props.matchAnalysis?.listHeadToHeadGroupLeague || {})
+						{Object.keys(h2hData?.listHeadToHeadGroupLeague || {})
 							.filter(
-								(item) =>
-									props.matchAnalysis?.listHeadToHeadGroupLeague?.[item]
-										?.length > 0
+								(item) => h2hData?.listHeadToHeadGroupLeague?.[item]?.length > 0
 							)
 							.map((item: any, index) => (
 								<div key={index} className="w-full">
@@ -211,7 +213,7 @@ const H2H = (props: Props) => {
 										</div>
 									</div>
 									<div className="self-stretch  flex-col justify-start items-center gap-2 flex">
-										{props.matchAnalysis?.listHeadToHeadGroupLeague[item]?.map(
+										{h2hData?.listHeadToHeadGroupLeague[item]?.map(
 											(match: any, key: number) => (
 												<div
 													className="w-full flex-col justify-start items-start gap-1 flex first:border-b-2 first:mt-2 pb-4"
@@ -221,14 +223,16 @@ const H2H = (props: Props) => {
 														<div className="grow shrink basis-0 h-[72px] flex-col justify-between items-start gap-2 inline-flex">
 															<div className="self-stretch justify-between items-center gap-[139px] inline-flex">
 																<div className="justify-start items-center gap-4 flex">
-																	<img
-																		className="w-8 h-8 rounded-full"
+																	<Image
+																		className=" rounded-full"
 																		src={
 																			match?.split(",")?.[34] !== "undefined"
 																				? match?.split(",")?.[34]
 																				: LOGO_DEFAULT
 																		}
 																		alt=""
+																		width={32}
+																		height={32}
 																	/>
 																	<p className="text-neutral-900 text-sm font-normal leading-[21px]">
 																		{match?.split(",")?.[4]}
@@ -245,14 +249,16 @@ const H2H = (props: Props) => {
 															</div>
 															<div className="self-stretch justify-between items-center gap-28 inline-flex">
 																<div className="justify-start items-center gap-4 flex">
-																	<img
-																		className="w-8 h-8 rounded-full"
+																	<Image
+																		className=" rounded-full"
 																		src={
 																			match?.split(",")?.[35] !== "undefined"
 																				? match?.split(",")?.[35]
 																				: LOGO_DEFAULT
 																		}
 																		alt=""
+																		width={32}
+																		height={32}
 																	/>
 																	<p className="text-neutral-900 text-sm font-normal leading-[21px]">
 																		{match?.split(",")?.[6]}
@@ -282,14 +288,14 @@ const H2H = (props: Props) => {
 																		Number(match?.split(",")?.[8]),
 																		Number(match?.split(",")?.[9]),
 																		Number(match?.split(",")?.[5]),
-																		Number(props.match?.homeId)
+																		Number(match?.homeId)
 																	) == "W"
 																		? "bg-emerald-500"
 																		: checkMatchStatus(
 																				Number(match?.split(",")?.[8]),
 																				Number(match?.split(",")?.[9]),
 																				Number(match?.split(",")?.[5]),
-																				Number(props.match?.homeId)
+																				Number(match?.homeId)
 																		  ) == "L"
 																		? "bg-red-600"
 																		: "bg-gray-400"
@@ -299,7 +305,7 @@ const H2H = (props: Props) => {
 																	Number(match?.split(",")?.[8]),
 																	Number(match?.split(",")?.[9]),
 																	Number(match?.split(",")?.[5]),
-																	Number(props.match?.homeId)
+																	Number(match?.homeId)
 																)}
 															</p>
 														</div>
@@ -317,13 +323,15 @@ const H2H = (props: Props) => {
 				<div className="flex flex-1 p-4 rounded-2xl shadow border border-neutral-200 flex-col justify-start items-center ">
 					<div className="w-full">
 						<div className="flex">
-							<img
+							<Image
 								className="w-8 h-8 rounded-full mr-3"
-								src={props.match?.homeIcon || LOGO_DEFAULT}
+								src={match?.homeIcon || LOGO_DEFAULT}
 								alt=""
+								width={32}
+								height={32}
 							/>
 							<h2 className=" text-yellow-700 text-2xl font-bold leading-9">
-								{props.match?.homeName}
+								{match?.homeName}
 							</h2>
 						</div>
 
@@ -331,12 +339,14 @@ const H2H = (props: Props) => {
 							<p>Số Trận gần nhất</p>
 							<div className="w-12 h-[29px] px-2 py-1 bg-amber-500 rounded-lg shadow border border-neutral-200 justify-center items-center gap-2 inline-flex">
 								<div className="text-center text-white text-sm font-normal leading-[21px]">
-									{props.matchAnalysis?.homeLastMatches?.length || 0}
+									{h2hData?.homeLastMatches?.length || 0}
 								</div>
-								<img
-									className="w-4 h-4 relative"
+								<Image
+									className=" relative"
 									src="/images/arrow-down.svg"
 									alt=""
+									width={16}
+									height={16}
 								/>
 							</div>
 						</div>
@@ -351,8 +361,8 @@ const H2H = (props: Props) => {
 									</div>
 									<span className="text-center text-black text-sm font-normal leading-[21px]">
 										x
-										{homeCount[props.match?.homeId]?.homeWins +
-											homeCount[props.match?.homeId]?.awayWins}
+										{homeCount[match?.homeId]?.homeWins +
+											homeCount[match?.homeId]?.awayWins}
 									</span>
 								</div>
 							</div>
@@ -365,8 +375,8 @@ const H2H = (props: Props) => {
 									</div>
 									<span className="text-center text-black text-sm font-normal leading-[21px]">
 										x
-										{homeCount[props.match?.homeId]?.homeDraws +
-											homeCount[props.match?.homeId]?.awayDraws}
+										{homeCount[match?.homeId]?.homeDraws +
+											homeCount[match?.homeId]?.awayDraws}
 									</span>
 								</div>
 							</div>
@@ -379,21 +389,18 @@ const H2H = (props: Props) => {
 									</div>
 									<span className="text-center text-black text-sm font-normal leading-[21px]">
 										x
-										{homeCount[props.match?.homeId]?.homeLosses +
-											homeCount[props.match?.homeId]?.awayLosses}
+										{homeCount[match?.homeId]?.homeLosses +
+											homeCount[match?.homeId]?.awayLosses}
 									</span>
 								</div>
 							</div>
 						</div>
 					</div>
 					<div className="w-full mt-4 flex rounded-2xl shadow border border-neutral-200 flex-col justify-start items-start">
-						{Object.keys(
-							props.matchAnalysis?.listHomeLastMatchesGroupLeague || {}
-						)
+						{Object.keys(h2hData?.listHomeLastMatchesGroupLeague || {})
 							.filter(
 								(item) =>
-									props.matchAnalysis?.listHomeLastMatchesGroupLeague?.[item]
-										?.length > 0
+									h2hData?.listHomeLastMatchesGroupLeague?.[item]?.length > 0
 							)
 							.map((item: any, index) => (
 								<div key={index} className="w-full">
@@ -416,98 +423,102 @@ const H2H = (props: Props) => {
 										</div>
 									</div>
 									<div className="self-stretch  flex-col justify-start items-center gap-2 flex">
-										{props.matchAnalysis?.listHomeLastMatchesGroupLeague[
-											item
-										]?.map((match: any, key: number) => (
-											<div
-												className="w-full flex-col justify-start items-start gap-1 flex first:border-b-2 first:mt-2 pb-4"
-												key={key}
-											>
-												<div className="self-stretch px-4 justify-start items-center gap-4 inline-flex">
-													<div className="grow shrink basis-0 h-[72px] flex-col justify-between items-start gap-2 inline-flex">
-														<div className="self-stretch justify-between items-center gap-[139px] inline-flex">
-															<div className="justify-start items-center gap-4 flex">
-																<img
-																	className="w-8 h-8 rounded-full"
-																	src={match.split(",")?.[36] || LOGO_DEFAULT}
-																	alt=""
-																/>
-																<p className="text-neutral-900 text-sm font-normal leading-[21px]">
-																	{match?.split(",")?.[4]}
-																</p>
-															</div>
-															<div className="justify-start items-start gap-8 flex">
-																<div className="w-5 text-center text-neutral-900 text-sm font-normal leading-[21px]">
-																	{match?.split(",")?.[8]}
+										{h2hData?.listHomeLastMatchesGroupLeague[item]?.map(
+											(match: any, key: number) => (
+												<div
+													className="w-full flex-col justify-start items-start gap-1 flex first:border-b-2 first:mt-2 pb-4"
+													key={key}
+												>
+													<div className="self-stretch px-4 justify-start items-center gap-4 inline-flex">
+														<div className="grow shrink basis-0 h-[72px] flex-col justify-between items-start gap-2 inline-flex">
+															<div className="self-stretch justify-between items-center gap-[139px] inline-flex">
+																<div className="justify-start items-center gap-4 flex">
+																	<Image
+																		className="rounded-full"
+																		src={match.split(",")?.[36] || LOGO_DEFAULT}
+																		alt=""
+																		width={32}
+																		height={32}
+																	/>
+																	<p className="text-neutral-900 text-sm font-normal leading-[21px]">
+																		{match?.split(",")?.[4]}
+																	</p>
 																</div>
-																<div className="w-5 text-center text-neutral-900 text-sm font-normal leading-[21px]">
-																	{match?.split(",")?.[10]}
+																<div className="justify-start items-start gap-8 flex">
+																	<div className="w-5 text-center text-neutral-900 text-sm font-normal leading-[21px]">
+																		{match?.split(",")?.[8]}
+																	</div>
+																	<div className="w-5 text-center text-neutral-900 text-sm font-normal leading-[21px]">
+																		{match?.split(",")?.[10]}
+																	</div>
 																</div>
 															</div>
-														</div>
-														<div className="self-stretch justify-between items-center gap-28 inline-flex">
-															<div className="justify-start items-center gap-4 flex">
-																<img
-																	className="w-8 h-8 rounded-full"
-																	src={
-																		match?.split(",")?.[35] !== "undefined"
-																			? match?.split(",")?.[35]
-																			: LOGO_DEFAULT
-																	}
-																	alt=""
-																/>
-																<p className="text-neutral-900 text-sm font-normal leading-[21px]">
-																	{match?.split(",")?.[6]}
-																</p>
-															</div>
-															<div className="justify-start items-start gap-8 flex">
-																<p className="w-5 text-center text-neutral-900 text-sm font-normal leading-[21px]">
-																	{match?.split(",")?.[9]}
-																</p>
-																<p className="w-5 text-center text-neutral-900 text-sm font-normal leading-[21px]">
-																	{match?.split(",")?.[11]}
-																</p>
+															<div className="self-stretch justify-between items-center gap-28 inline-flex">
+																<div className="justify-start items-center gap-4 flex">
+																	<Image
+																		className="rounded-full"
+																		src={
+																			match?.split(",")?.[35] !== "undefined"
+																				? match?.split(",")?.[35]
+																				: LOGO_DEFAULT
+																		}
+																		alt=""
+																		width={32}
+																		height={32}
+																	/>
+																	<p className="text-neutral-900 text-sm font-normal leading-[21px]">
+																		{match?.split(",")?.[6]}
+																	</p>
+																</div>
+																<div className="justify-start items-start gap-8 flex">
+																	<p className="w-5 text-center text-neutral-900 text-sm font-normal leading-[21px]">
+																		{match?.split(",")?.[9]}
+																	</p>
+																	<p className="w-5 text-center text-neutral-900 text-sm font-normal leading-[21px]">
+																		{match?.split(",")?.[11]}
+																	</p>
+																</div>
 															</div>
 														</div>
 													</div>
-												</div>
-												<div className="self-stretch px-4 justify-between items-start flex mt-2">
-													<p className="text-neutral-900 text-sm font-normal leading-[21px]">
-														{moment(
-															new Date(match?.split(",")?.[3] * 1000)
-														).format("HH:mm A  | DD.MM.YYYY")}
-													</p>
-													<div className="w-5 h-5 bg-gray-400 rounded-[26px] flex-col justify-center items-center gap-2.5 inline-flex">
-														<p
-															className={`w-5 h-5 ${
-																checkMatchStatus(
+													<div className="self-stretch px-4 justify-between items-start flex mt-2">
+														<p className="text-neutral-900 text-sm font-normal leading-[21px]">
+															{moment(
+																new Date(match?.split(",")?.[3] * 1000)
+															).format("HH:mm A  | DD.MM.YYYY")}
+														</p>
+														<div className="w-5 h-5 bg-gray-400 rounded-[26px] flex-col justify-center items-center gap-2.5 inline-flex">
+															<p
+																className={`w-5 h-5 ${
+																	checkMatchStatus(
+																		Number(match?.split(",")?.[8]),
+																		Number(match?.split(",")?.[9]),
+																		Number(match?.split(",")?.[5]),
+																		Number(match?.homeId)
+																	) == "W"
+																		? "bg-emerald-500"
+																		: checkMatchStatus(
+																				Number(match?.split(",")?.[8]),
+																				Number(match?.split(",")?.[9]),
+																				Number(match?.split(",")?.[5]),
+																				Number(match?.homeId)
+																		  ) == "L"
+																		? "bg-red-600"
+																		: "bg-gray-400"
+																} rounded-[26px] text-white flex-col text-[12px] justify-center items-center gap-2.5 inline-flex`}
+															>
+																{checkMatchStatus(
 																	Number(match?.split(",")?.[8]),
 																	Number(match?.split(",")?.[9]),
 																	Number(match?.split(",")?.[5]),
-																	Number(props.match?.homeId)
-																) == "W"
-																	? "bg-emerald-500"
-																	: checkMatchStatus(
-																			Number(match?.split(",")?.[8]),
-																			Number(match?.split(",")?.[9]),
-																			Number(match?.split(",")?.[5]),
-																			Number(props.match?.homeId)
-																	  ) == "L"
-																	? "bg-red-600"
-																	: "bg-gray-400"
-															} rounded-[26px] text-white flex-col text-[12px] justify-center items-center gap-2.5 inline-flex`}
-														>
-															{checkMatchStatus(
-																Number(match?.split(",")?.[8]),
-																Number(match?.split(",")?.[9]),
-																Number(match?.split(",")?.[5]),
-																Number(props.match?.homeId)
-															)}
-														</p>
+																	Number(match?.homeId)
+																)}
+															</p>
+														</div>
 													</div>
 												</div>
-											</div>
-										))}
+											)
+										)}
 									</div>
 								</div>
 							))}
@@ -518,26 +529,32 @@ const H2H = (props: Props) => {
 				<div className="flex flex-1 p-4  rounded-2xl shadow border border-neutral-200 flex-col justify-start items-center ">
 					<div className="w-full">
 						<div className="flex">
-							<img
-								className="w-8 h-8 rounded-full mr-3"
-								src={props.match?.awayIcon || LOGO_DEFAULT}
-								alt=""
-							/>
+							<div className="w-8 h-8  relative mr-3">
+								<Image
+									className="object-cover rounded-full"
+									src={match?.awayIcon || LOGO_DEFAULT}
+									alt=""
+									fill
+								/>
+							</div>
 							<h2 className=" text-yellow-700 text-2xl font-bold leading-9">
-								{props.match?.awayName}
+								{match?.awayName}
 							</h2>
 						</div>
 						<div className="flex justify-between mt-3">
 							<p>Số Trận gần nhất</p>
 							<div className="w-12 h-[29px] px-2 py-1 bg-amber-500 rounded-lg shadow border border-neutral-200 justify-center items-center gap-2 inline-flex">
 								<div className="text-center text-white text-sm font-normal leading-[21px]">
-									{props.matchAnalysis?.awayLastMatches?.length || 0}
+									{h2hData?.awayLastMatches?.length || 0}
 								</div>
-								<img
-									className="w-4 h-4 relative"
-									src="/images/arrow-down.svg"
-									alt=""
-								/>
+								<div className="w-4 h-4 relative">
+									<Image
+										className="object-cover"
+										src="/images/arrow-down.svg"
+										alt=""
+										fill
+									/>
+								</div>
 							</div>
 						</div>
 						<div className="flex justify-between  mt-3">
@@ -550,8 +567,8 @@ const H2H = (props: Props) => {
 									</div>
 									<span className="text-center text-black text-sm font-normal leading-[21px]">
 										x
-										{awayCount[props.match?.awayId]?.homeWins +
-											awayCount[props.match?.awayId]?.awayWins}
+										{awayCount[match?.awayId]?.homeWins +
+											awayCount[match?.awayId]?.awayWins}
 									</span>
 								</div>
 							</div>
@@ -564,8 +581,8 @@ const H2H = (props: Props) => {
 									</div>
 									<span className="text-center text-black text-sm font-normal leading-[21px]">
 										x
-										{awayCount[props.match?.awayId]?.homeDraws +
-											awayCount[props.match?.awayId]?.awayDraws}
+										{awayCount[match?.awayId]?.homeDraws +
+											awayCount[match?.awayId]?.awayDraws}
 									</span>
 								</div>
 							</div>
@@ -578,21 +595,18 @@ const H2H = (props: Props) => {
 									</div>
 									<span className="text-center text-black text-sm font-normal leading-[21px]">
 										x
-										{awayCount[props.match?.awayId]?.homeLosses +
-											awayCount[props.match?.awayId]?.awayLosses}
+										{awayCount[match?.awayId]?.homeLosses +
+											awayCount[match?.awayId]?.awayLosses}
 									</span>
 								</div>
 							</div>
 						</div>
 					</div>
 					<div className="w-full mt-4 flex rounded-2xl shadow border border-neutral-200 flex-col justify-start items-start">
-						{Object.keys(
-							props.matchAnalysis?.listAwayLastMatchesGroupLeague || {}
-						)
+						{Object.keys(h2hData?.listAwayLastMatchesGroupLeague || {})
 							?.filter(
 								(item) =>
-									props.matchAnalysis?.listAwayLastMatchesGroupLeague?.[item]
-										?.length > 0
+									h2hData?.listAwayLastMatchesGroupLeague?.[item]?.length > 0
 							)
 							.map((item: any, index: number) => (
 								<div key={index} className="w-full">
@@ -614,100 +628,100 @@ const H2H = (props: Props) => {
 										</div>
 									</div>
 									<div className="self-stretch  flex-col justify-start items-center gap-2 flex">
-										{props.matchAnalysis?.listAwayLastMatchesGroupLeague[
-											item
-										]?.map((match: any, key: number) => (
-											<div
-												className="w-full flex-col justify-start items-start gap-1 flex first:border-b-2 first:mt-2 pb-4"
-												key={key}
-											>
-												<div className="self-stretch px-4 justify-start items-center gap-4 inline-flex">
-													<div className="grow shrink basis-0 h-[72px] flex-col justify-between items-start gap-2 inline-flex">
-														<div className="self-stretch justify-between items-center gap-[139px] inline-flex">
-															<div className="justify-start items-center gap-4 flex">
-																<img
-																	className="w-8 h-8 rounded-full"
-																	src={match?.split(",")?.[3] || LOGO_DEFAULT}
-																	alt=""
-																/>
-																<p className="text-neutral-900 text-sm font-normal leading-[21px]">
-																	{match?.split(",")?.[4]}
-																</p>
-															</div>
-															<div className="justify-start items-start gap-8 flex">
-																<div className="w-5 text-center text-neutral-900 text-sm font-normal leading-[21px]">
-																	{match?.split(",")?.[8]}
+										{h2hData?.listAwayLastMatchesGroupLeague[item]?.map(
+											(match: any, key: number) => (
+												<div
+													className="w-full flex-col justify-start items-start gap-1 flex first:border-b-2 first:mt-2 pb-4"
+													key={key}
+												>
+													<div className="self-stretch px-4 justify-start items-center gap-4 inline-flex">
+														<div className="grow shrink basis-0 h-[72px] flex-col justify-between items-start gap-2 inline-flex">
+															<div className="self-stretch justify-between items-center gap-[139px] inline-flex">
+																<div className="justify-start items-center gap-4 flex">
+																	<img
+																		className="w-8 h-8 rounded-full"
+																		src={match?.split(",")?.[3] || LOGO_DEFAULT}
+																		alt=""
+																	/>
+																	<p className="text-neutral-900 text-sm font-normal leading-[21px]">
+																		{match?.split(",")?.[4]}
+																	</p>
 																</div>
-																<div className="w-5 text-center text-neutral-900 text-sm font-normal leading-[21px]">
-																	{match?.split(",")?.[10]}
+																<div className="justify-start items-start gap-8 flex">
+																	<div className="w-5 text-center text-neutral-900 text-sm font-normal leading-[21px]">
+																		{match?.split(",")?.[8]}
+																	</div>
+																	<div className="w-5 text-center text-neutral-900 text-sm font-normal leading-[21px]">
+																		{match?.split(",")?.[10]}
+																	</div>
 																</div>
 															</div>
-														</div>
-														<div className="self-stretch justify-between items-center gap-28 inline-flex">
-															<div className="justify-start items-center gap-4 flex">
-																<img
-																	className="w-8 h-8 rounded-full"
-																	src={`${
-																		match?.split(",")?.[35] !== "undefined"
-																			? match?.split(",")?.[35]
-																			: LOGO_DEFAULT
-																	}`}
-																	alt=""
-																/>
-																<p className="text-neutral-900 text-sm font-normal leading-[21px]">
-																	{match?.split(",")?.[6]}
-																</p>
-															</div>
-															<div className="justify-start items-start gap-8 flex">
-																<p className="w-5 text-center text-neutral-900 text-sm font-normal leading-[21px]">
-																	{match?.split(",")?.[9]}
-																</p>
-																<p className="w-5 text-center text-neutral-900 text-sm font-normal leading-[21px]">
-																	{match?.split(",")?.[11]}
-																</p>
+															<div className="self-stretch justify-between items-center gap-28 inline-flex">
+																<div className="justify-start items-center gap-4 flex">
+																	<img
+																		className="w-8 h-8 rounded-full"
+																		src={`${
+																			match?.split(",")?.[35] !== "undefined"
+																				? match?.split(",")?.[35]
+																				: LOGO_DEFAULT
+																		}`}
+																		alt=""
+																	/>
+																	<p className="text-neutral-900 text-sm font-normal leading-[21px]">
+																		{match?.split(",")?.[6]}
+																	</p>
+																</div>
+																<div className="justify-start items-start gap-8 flex">
+																	<p className="w-5 text-center text-neutral-900 text-sm font-normal leading-[21px]">
+																		{match?.split(",")?.[9]}
+																	</p>
+																	<p className="w-5 text-center text-neutral-900 text-sm font-normal leading-[21px]">
+																		{match?.split(",")?.[11]}
+																	</p>
+																</div>
 															</div>
 														</div>
 													</div>
-												</div>
-												<div className="self-stretch px-4 justify-between items-start flex mt-2">
-													<p className="text-neutral-900 text-sm font-normal leading-[21px]">
-														{moment(
-															new Date(match?.split(",")?.[3] * 1000)
-														).format("HH:mm A  | DD.MM.YYYY")}
-													</p>
-													<div
-														className={`w-5 h-5 ${
-															checkMatchStatus(
-																Number(match?.split(",")?.[8]),
-																Number(match?.split(",")?.[9]),
-																Number(match?.split(",")?.[5]),
-																Number(props.match?.awayId)
-															) == "W"
-																? "bg-emerald-500"
-																: checkMatchStatus(
-																		Number(match?.split(",")?.[8]),
-																		Number(match?.split(",")?.[9]),
-																		Number(match?.split(",")?.[5]),
-																		Number(props.match?.awayId)
-																  ) == "L"
-																? "bg-red-600"
-																: "bg-gray-400"
-														} rounded-[26px] flex-col justify-center items-center gap-2.5 inline-flex`}
-													>
-														<p
-															className={`text-center text-white text-[10px] font-semibold leading-[15px]`}
-														>
-															{checkMatchStatus(
-																Number(match?.split(",")?.[8]),
-																Number(match?.split(",")?.[9]),
-																Number(match?.split(",")?.[5]),
-																Number(props.match?.awayId)
-															)}
+													<div className="self-stretch px-4 justify-between items-start flex mt-2">
+														<p className="text-neutral-900 text-sm font-normal leading-[21px]">
+															{moment(
+																new Date(match?.split(",")?.[3] * 1000)
+															).format("HH:mm A  | DD.MM.YYYY")}
 														</p>
+														<div
+															className={`w-5 h-5 ${
+																checkMatchStatus(
+																	Number(match?.split(",")?.[8]),
+																	Number(match?.split(",")?.[9]),
+																	Number(match?.split(",")?.[5]),
+																	Number(match?.awayId)
+																) == "W"
+																	? "bg-emerald-500"
+																	: checkMatchStatus(
+																			Number(match?.split(",")?.[8]),
+																			Number(match?.split(",")?.[9]),
+																			Number(match?.split(",")?.[5]),
+																			Number(match?.awayId)
+																	  ) == "L"
+																	? "bg-red-600"
+																	: "bg-gray-400"
+															} rounded-[26px] flex-col justify-center items-center gap-2.5 inline-flex`}
+														>
+															<p
+																className={`text-center text-white text-[10px] font-semibold leading-[15px]`}
+															>
+																{checkMatchStatus(
+																	Number(match?.split(",")?.[8]),
+																	Number(match?.split(",")?.[9]),
+																	Number(match?.split(",")?.[5]),
+																	Number(match?.awayId)
+																)}
+															</p>
+														</div>
 													</div>
 												</div>
-											</div>
-										))}
+											)
+										)}
 									</div>
 								</div>
 							))}
