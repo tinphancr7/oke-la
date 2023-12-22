@@ -1,20 +1,19 @@
 import Image from "next/image";
 import Link from "next/link";
-import React, {useEffect, useState} from "react";
+import React from "react";
 
-import {LOGO_DEFAULT, schedules} from "@/constant";
+import {LOGO_DEFAULT} from "@/constant";
 import slugify from "slugify";
 import {getOtherLeagues} from "@/apis/league";
+import {useQuery} from "@tanstack/react-query";
 
 function LeagueOtherHome() {
-	const [leagues, setLeagues] = useState<any>([]);
-	const fetchOtherLeagues = async () => {
-		const result = await getOtherLeagues();
-		setLeagues(result?.data);
-	};
-	useEffect(() => {
-		fetchOtherLeagues();
-	}, []);
+	const {data} = useQuery({
+		queryKey: ["leagues"],
+		queryFn: () => getOtherLeagues(),
+	});
+	const leagues = data?.data;
+
 	return (
 		<div className="hidden lg:block mt-4">
 			<div className="font-semibold text-lg bg-secondary text-white py-2 pl-6 border-l-[12px] border-light-red rounded-tl-[8px] uppercase">

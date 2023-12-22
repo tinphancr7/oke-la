@@ -1,26 +1,19 @@
 import React, {useState, useMemo, useContext, useEffect} from "react";
-import ListMatchHomeItem from "./ListMatchHomeItem";
-
 import ButtonOnlyIcon from "@/components/button/ButtonOnlyIcon";
 import IconStar from "@/components/icons/Star";
-
 import IconCornerKick from "@/components/icons/CornerKick";
-
 import moment from "moment";
 import {AuthContext} from "@/context/AuthContext";
-import {getMatchesByDateGroupLeague} from "@/apis/match";
 import {toast} from "react-toastify";
 import {likeLeague, likeMatch, unLikeMatch, unlikeLeague} from "@/apis/user";
 import {useRouter} from "next/router";
 import {AiFillStar} from "react-icons/ai";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import ListMatchesHomeMobile from "./ListMatchesHomeMobile";
 import {FaAngleLeft, FaAngleRight, FaCalendarAlt} from "react-icons/fa";
 import Datetime from "react-datetime";
 import "moment/locale/vi";
-import {useInfiniteQuery} from "@tanstack/react-query";
-import LoadingSmall from "@/components/loading/LoadingSmall";
+import ListAllMatchHome from "./ListAllMatchHome";
 
 const convertDateToVN = (date: string) => {
 	switch (date) {
@@ -43,51 +36,11 @@ const convertDateToVN = (date: string) => {
 
 function ListMatchesHome() {
 	const [tab, setTab] = useState(0);
-
 	const {user, updateAuthUser} = useContext(AuthContext);
-
 	const router = useRouter();
-
-	const [searchMatch, setSearchMatch] = useState("");
 	// filter league
-
-	const [showBy, setShowBy] = useState<"league" | "time">("league");
 	const [date, setDate] = useState(new Date());
-
 	//
-
-	const [nextPage, setNextPage] = useState<any>(null);
-	const {
-		status,
-		data,
-		error,
-		isLoading,
-		isFetching,
-		isFetchingNextPage,
-		fetchNextPage,
-		hasNextPage,
-	} = useInfiniteQuery({
-		queryKey: ["listMatches", moment(date).format("YYYY-MM-DD"), searchMatch],
-		queryFn: async ({pageParam}) => {
-			const res = await getMatchesByDateGroupLeague(
-				pageParam,
-				5,
-				moment(date).format("YYYY-MM-DD")
-			);
-			setNextPage(pageParam + 1);
-			return res?.data;
-		},
-		initialPageParam: 1,
-		getNextPageParam: (lastPage) => {
-			return lastPage?.pageIndex ? lastPage?.pageIndex + 1 : undefined;
-		},
-	});
-
-	const listMatches = data?.pages?.reduce(
-		(acc, page) => [...acc, ...page?.result],
-		[]
-	);
-	console.log("listMatches", listMatches);
 
 	const handleLikeMatch = async (matchId: string) => {
 		try {
@@ -188,7 +141,6 @@ function ListMatchesHome() {
 			title: "ĐÃ KẾT THÚC",
 		},
 	];
-
 	const Loading = () => {
 		return new Array(5).fill(5).map((item) => {
 			return (
@@ -428,53 +380,16 @@ function ListMatchesHome() {
 						</div>
 					)}
 				</div>
-
-				<div className="mt-4">
-					{listMatches?.map((item) => (
-						<>
-							<div className="hidden lg:block">
-								<ListMatchHomeItem
-									isGroup={Boolean(showBy === "league")}
-									matchThesport={[]}
-									matchGroupLeague={item}
-									key={item?._id}
-								/>
-							</div>
-							<div className="block lg:hidden">
-								<ListMatchesHomeMobile
-									isGroup={Boolean(showBy === "league")}
-									key={item?._id}
-									item={item}
-									handleLikeLeague={handleLikeLeague}
-									handleUnLikeLeague={handleUnLikeLeague}
-									handleLikeMatch={handleLikeMatch}
-									handleUnLikeMatch={handleUnLikeMatch}
-									handleNavigate={handleNavigate}
-								/>
-							</div>
-						</>
-					))}
-				</div>
-
-				{isLoading && <Loading />}
 			</div>
-
-			{listMatches?.length > 0 && (
-				<div className="flex items-center justify-center mt-5">
-					<div className="w-[45%]"></div>
-					<button
-						onClick={() => fetchNextPage()}
-						disabled={!hasNextPage || isFetchingNextPage}
-						type="button"
-						className={`w-[150px] text-white bg-secondary focus:ring-4 focus:outline-none focus:ring-secondary dark:focus:ring-secondary font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 ${
-							hasNextPage ? "" : "opacity-50 cursor-not-allowed"
-						}}`}
-					>
-						{isFetchingNextPage ? <LoadingSmall /> : <span>Xem Thêm</span>}
-					</button>
-					<div className="w-[35%]"></div>
-				</div>
-			)}
+			<ListAllMatchHome
+				date={date}
+				handleLikeLeague={handleLikeLeague}
+				handleUnLikeLeague={handleUnLikeLeague}
+				handleLikeMatch={handleLikeMatch}
+				handleUnLikeMatch={handleUnLikeMatch}
+				handleNavigate={handleNavigate}
+				Loading={Loading}
+			/>
 		</>
 	);
 }

@@ -14,9 +14,9 @@ function HomePage() {
 					<div className="grid grid-cols-12 gap-x-5">
 						<div className="col-span-12 lg:col-span-3 bg-danger order-last lg:order-first">
 							<div className="sticky top-24">
-								{/* <MyFavouriteLeagues /> */}
-								{/* <HotLeagueHome /> */}
-								{/* <LeagueOtherHome /> */}
+								<MyFavouriteLeagues />
+								<HotLeagueHome />
+								<LeagueOtherHome />
 							</div>
 						</div>
 						<div className="col-span-12 lg:col-span-6">
