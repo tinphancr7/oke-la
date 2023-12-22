@@ -307,7 +307,7 @@ function ListMatchesHome() {
 	};
 
 	useEffect(() => {
-		getData();
+		// getData();
 	}, [tab, showBy, date]);
 
 	useEffect(() => {
@@ -728,22 +728,26 @@ function ListMatchesHome() {
 						<>
 							{tab === 2 ? (
 								<>
-									{/* <ListMatchOddHomeItem
-										isGroup={Boolean(showBy === "league")}
-										matchThesport={[]}
-										matchGroupLeague={item}
-										key={item?._id}
-									/>
-									<ListMatchesOddHomeMobile
-										isGroup={Boolean(showBy === "league")}
-										key={item?._id}
-										item={item}
-										handleLikeLeague={handleLikeLeague}
-										handleUnLikeLeague={handleUnLikeLeague}
-										handleLikeMatch={handleLikeMatch}
-										handleUnLikeMatch={handleUnLikeMatch}
-										handleNavigate={handleNavigate}
-									/> */}
+									<div className="hidden lg:block">
+										<ListMatchOddHomeItem
+											isGroup={Boolean(showBy === "league")}
+											matchThesport={[]}
+											matchGroupLeague={item}
+											key={item?._id}
+										/>
+									</div>
+									<div className="block lg:hidden">
+										<ListMatchesOddHomeMobile
+											isGroup={Boolean(showBy === "league")}
+											key={item?._id}
+											item={item}
+											handleLikeLeague={handleLikeLeague}
+											handleUnLikeLeague={handleUnLikeLeague}
+											handleLikeMatch={handleLikeMatch}
+											handleUnLikeMatch={handleUnLikeMatch}
+											handleNavigate={handleNavigate}
+										/>
+									</div>
 								</>
 							) : (
 								<>
