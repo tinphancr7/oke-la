@@ -19,6 +19,8 @@ import ListMatchesHomeMobile from "./ListMatchesHomeMobile";
 import {FaCalendarAlt} from "react-icons/fa";
 import Datetime from "react-datetime";
 import "moment/locale/vi";
+import {useInfiniteQuery} from "@tanstack/react-query";
+import LoadingSmall from "@/components/loading/LoadingSmall";
 
 const convertDateToVN = (date: string) => {
 	switch (date) {
@@ -45,87 +47,47 @@ function ListMatchesHome() {
 	const {user, updateAuthUser} = useContext(AuthContext);
 
 	const router = useRouter();
-	const [todayMatches, setTodayMatches] = useState<any[]>([]);
 
-	const [pageSize, setPageSize] = useState(5);
-	const [pageIndex, setPageIndex] = useState(1);
-	const [hasmore, setHasmore] = useState(false);
-	const [loading, setLoading] = useState(false);
-	const [loadingMore, setLoadingMore] = useState(false);
 	const [searchMatch, setSearchMatch] = useState("");
 	// filter league
 
 	const [showBy, setShowBy] = useState<"league" | "time">("league");
 	const [date, setDate] = useState(new Date());
 
-	const getDataTodayMatches = async (isFiltering = false) => {
-		try {
-			setLoading(true);
-			const todayMatchesRes = await getMatchesByDateGroupLeague(
-				1,
-				showBy === "league" ? pageSize : 9999,
-				moment(date).format("YYYY-MM-DD"),
-				searchMatch
+	//
+
+	const [nextPage, setNextPage] = useState<any>(null);
+	const {
+		status,
+		data,
+		error,
+		isLoading,
+		isFetching,
+		isFetchingNextPage,
+		fetchNextPage,
+		hasNextPage,
+	} = useInfiniteQuery({
+		queryKey: ["listMatches", moment(date).format("YYYY-MM-DD"), searchMatch],
+		queryFn: async ({pageParam}) => {
+			const res = await getMatchesByDateGroupLeague(
+				pageParam,
+				5,
+				moment(date).format("YYYY-MM-DD")
 			);
+			setNextPage(pageParam + 1);
+			return res?.data;
+		},
+		initialPageParam: 1,
+		getNextPageParam: (lastPage) => {
+			return lastPage?.pageIndex ? lastPage?.pageIndex + 1 : undefined;
+		},
+	});
 
-			// getMatchesByDateGroupLeagueNext(2);
-			setTodayMatches(todayMatchesRes?.data?.result);
-			setPageIndex(1);
-			if (pageIndex >= todayMatchesRes?.data?.totalPage) {
-				setHasmore(false);
-			} else {
-				setHasmore(true);
-			}
-		} catch (error) {
-			console.log(error);
-		} finally {
-			setLoading(false);
-		}
-	};
-
-	const getData = async (filtering = false) => {
-		getDataTodayMatches(filtering);
-	};
-
-	const getMatchesByDateGroupLeagueNext = async (page) => {
-		return await getMatchesByDateGroupLeague(
-			page,
-			pageSize,
-			moment(date).format("YYYY-MM-DD"),
-			searchMatch
-		);
-	};
-	const handleLoadMore = async (page: number) => {
-		try {
-			setLoadingMore(true);
-
-			let result = await getMatchesByDateGroupLeague(
-				page,
-				pageSize,
-				moment(date).format("YYYY-MM-DD"),
-				searchMatch
-			);
-			// getMatchesByDateGroupLeagueNext(page + 1);
-
-			setTodayMatches((prev) => [...prev, ...result?.data?.result]);
-
-			if (page >= result?.data?.totalPage) {
-				setHasmore(false);
-			} else {
-				setHasmore(true);
-			}
-
-			setPageIndex(page);
-		} catch (error) {
-			console.log(error);
-		} finally {
-			setLoadingMore(false);
-		}
-	};
-
-	useEffect(() => {
-		// getData();
-	}, [tab, showBy, date]);
+	const listMatches = data?.pages?.reduce(
+		(acc, page) => [...acc, ...page?.result],
+		[]
+	);
+	console.log("listMatches", listMatches);
 
 	const handleLikeMatch = async (matchId: string) => {
 		try {
@@ -226,12 +188,6 @@ function ListMatchesHome() {
 			title: "ĐÃ KẾT THÚC",
 		},
 	];
-
-	const genDataMatches = useMemo(() => {
-		if (tab === 0) return todayMatches;
-
-		return [];
-	}, [tab, todayMatches]);
 
 	const Loading = () => {
 		return new Array(5).fill(5).map((item) => {
@@ -418,7 +374,7 @@ function ListMatchesHome() {
 								dateFormat="DD/MM ddd"
 								timeFormat={false}
 								onChange={(value) =>
-									!loading && setDate(moment(value).toDate())
+									!isLoading && setDate(moment(value).toDate())
 								}
 								renderMonth={(props, month, year, selectedDate) => (
 									<td
@@ -439,7 +395,7 @@ function ListMatchesHome() {
 											<span
 												className="cursor-pointer hidden lg:inline"
 												onClick={() =>
-													!loading &&
+													!isLoading &&
 													setDate(moment(date).add(-1, "day").toDate())
 												}
 											>
@@ -471,7 +427,7 @@ function ListMatchesHome() {
 											<span
 												className="cursor-pointer hidden lg:inline"
 												onClick={() =>
-													!loading &&
+													!isLoading &&
 													setDate(moment(date).add(1, "day").toDate())
 												}
 											>
@@ -498,7 +454,7 @@ function ListMatchesHome() {
 				</div>
 
 				<div className="mt-4">
-					{(loading ? [] : genDataMatches)?.map((item) => (
+					{listMatches?.map((item) => (
 						<>
 							<div className="hidden lg:block">
 								<ListMatchHomeItem
@@ -524,7 +480,7 @@ function ListMatchesHome() {
 					))}
 				</div>
 
-				{(loading || loadingMore) && <Loading />}
+				{isLoading && <Loading />}
 			</div>
 			{/* filter list matches */}
 			{/* <FilterListMatchesHome
@@ -536,7 +492,7 @@ function ListMatchesHome() {
 				onFilterByLeague={handleFilterByLeague}
 				handleCheckAll={handleCheckAll}
 			/> */}
-			<div className="flex items-center justify-center mt-4">
+			{/* <div className="flex items-center justify-center mt-4">
 				<button
 					onClick={() => handleLoadMore(pageIndex + 1)}
 					type="button"
@@ -547,7 +503,23 @@ function ListMatchesHome() {
 				>
 					<span>Xem Thêm</span>
 				</button>
-			</div>
+			</div> */}
+			{listMatches?.length > 0 && (
+				<div className="flex items-center justify-center mt-5">
+					<div className="w-[45%]"></div>
+					<button
+						onClick={() => fetchNextPage()}
+						disabled={!hasNextPage || isFetchingNextPage}
+						type="button"
+						className={`w-[150px] text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 ${
+							hasNextPage ? "" : "opacity-50 cursor-not-allowed"
+						}}`}
+					>
+						{isFetchingNextPage ? <LoadingSmall /> : <span>Xem Thêm</span>}
+					</button>
+					<div className="w-[35%]"></div>
+				</div>
+			)}
 		</>
 	);
 }
