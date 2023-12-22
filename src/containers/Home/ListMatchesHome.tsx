@@ -728,7 +728,7 @@ function ListMatchesHome() {
 						<>
 							{tab === 2 ? (
 								<>
-									<div className="hidden lg:block">
+									{/* <div className="hidden lg:block">
 										<ListMatchOddHomeItem
 											isGroup={Boolean(showBy === "league")}
 											matchThesport={[]}
@@ -747,7 +747,7 @@ function ListMatchesHome() {
 											handleUnLikeMatch={handleUnLikeMatch}
 											handleNavigate={handleNavigate}
 										/>
-									</div>
+									</div> */}
 								</>
 							) : (
 								<>
