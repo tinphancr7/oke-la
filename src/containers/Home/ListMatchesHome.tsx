@@ -68,7 +68,7 @@ function ListMatchesHome() {
 				searchMatch
 			);
 
-			getMatchesByDateGroupLeagueNext(2);
+			// getMatchesByDateGroupLeagueNext(2);
 			setTodayMatches(todayMatchesRes?.data?.result);
 			setPageIndex(1);
 			if (pageIndex >= todayMatchesRes?.data?.totalPage) {
@@ -500,14 +500,14 @@ function ListMatchesHome() {
 				<div className="mt-4">
 					{(loading ? [] : genDataMatches)?.map((item) => (
 						<>
-							{/* <div className="hidden lg:block">
+							<div className="hidden lg:block">
 								<ListMatchHomeItem
 									isGroup={Boolean(showBy === "league")}
 									matchThesport={[]}
 									matchGroupLeague={item}
 									key={item?._id}
 								/>
-							</div> */}
+							</div>
 							<div className="block lg:hidden">
 								<ListMatchesHomeMobile
 									isGroup={Boolean(showBy === "league")}

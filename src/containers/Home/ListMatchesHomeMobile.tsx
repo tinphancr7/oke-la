@@ -131,4 +131,4 @@ function ListMatchesHomeMobile({
 	);
 }
 
-export default ListMatchesHomeMobile;
+export default React.memo(ListMatchesHomeMobile);
