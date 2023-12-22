@@ -71,10 +71,6 @@ function ListMatchesHome() {
 	const [loadingMore, setLoadingMore] = useState(false);
 	const [searchMatch, setSearchMatch] = useState("");
 	// filter league
-	const [listLeague, setListLeague] = useState([]);
-	const [listChosenLeague, setListChosenLeague] = useState<string[]>([]);
-	const [showFilterLeague, setShowFilterLeague] = useState(false);
-	const [filtering, setFiltering] = useState(false);
 
 	const [showBy, setShowBy] = useState<"league" | "time">("league");
 	const [date, setDate] = useState(new Date());
@@ -226,7 +222,17 @@ function ListMatchesHome() {
 	};
 
 	const getData = async (filtering = false) => {
-		getDataTodayMatches(filtering);
+		if (tab == 3) {
+			getDataUpcomingMatches(filtering);
+		} else if (tab === 2) {
+			getDataTodayRateMatches(filtering);
+		} else if (tab == 1) {
+			getDataPlayingMatches(filtering);
+		} else if (tab == 4) {
+			getDataFinishMatch(filtering);
+		} else {
+			getDataTodayMatches(filtering);
+		}
 	};
 
 	const getMatchesByDateGroupLeagueNext = async (page) => {
@@ -303,16 +309,6 @@ function ListMatchesHome() {
 	useEffect(() => {
 		getData();
 	}, [tab, showBy, date]);
-
-	// useEffect(() => {
-	//   const debounce = setTimeout(() => {
-	//     getDataSearch();
-	//   }, 800);
-
-	//   return () => {
-	//     clearTimeout(debounce);
-	//   };
-	// }, [searchMatch]);
 
 	useEffect(() => {
 		const getLeagues = async () => {
@@ -445,9 +441,6 @@ function ListMatchesHome() {
 		if (tab === 1) return playingMatches;
 		if (tab === 2) {
 			return todayRateMatches;
-			// if (user) {
-			//   return hotMatchesData;
-			// } else return hotMatches;
 		}
 
 		if (tab === 3) return upcomingMatches;
@@ -463,173 +456,151 @@ function ListMatchesHome() {
 		todayMatches,
 		todayRateMatches,
 		finishedMatches,
-		// hotMatchesData,
 		upcomingMatches,
 	]);
 
-	const handleChangeChosenListLeague = (league: string, status: boolean) => {
-		setListChosenLeague((prevState) =>
-			status ? [...prevState, league] : prevState?.filter((e) => e !== league)
-		);
-	};
+	// const Loading = () => {
+	// 	return new Array(5).fill(5).map((item) => {
+	// 		return (
+	// 			<div key={item?._id} className="mt-6">
+	// 				<div className="bg-secondary px-4 py-2 border-b-2 border-primary text-white text-sm flex items-center justify-between">
+	// 					{user?.leagues?.includes(item?._id) ? (
+	// 						<ButtonOnlyIcon onClick={() => handleUnLikeLeague(item?._id)}>
+	// 							<AiFillStar color={"#ffad01"} size={24} />
+	// 						</ButtonOnlyIcon>
+	// 					) : (
+	// 						<ButtonOnlyIcon onClick={() => handleLikeLeague(item?._id)}>
+	// 							<IconStar color="#ffffff" />
+	// 						</ButtonOnlyIcon>
+	// 					)}
+	// 				</div>
+	// 				{new Array(2).fill(2).map((x, index) => {
+	// 					return (
+	// 						<div
+	// 							className="p-4 bg-[#F4F5F6] border-b-2 border-[#DFDFDF]"
+	// 							key={index}
+	// 						>
+	// 							<div className="flex items-center justify-between gap-x-4">
+	// 								<div className="flex items-center gap-x-4 w-full sm:w-1/2">
+	// 									<div className="text-sm">
+	// 										<div>
+	// 											<Skeleton count={1} />
+	// 										</div>
+	// 										<div>
+	// 											<Skeleton count={1} />
+	// 										</div>
+	// 									</div>
+	// 									<div className="flex items-center justify-between gap-x-2 w-full">
+	// 										<div className="flex items-center gap-x-2 w-full">
+	// 											<div>
+	// 												<Skeleton count={1} />
+	// 											</div>
 
-	const handleCheckAll = (e: any) => {
-		if (e.target.checked) {
-			setListChosenLeague(listLeague.map((item: any) => item?._id));
-		} else {
-			setListChosenLeague([]);
-		}
-	};
+	// 											<div className="text-xs font-semibold">
+	// 												<div>
+	// 													<Skeleton count={1} />
+	// 												</div>
+	// 												<div className="mt-2">
+	// 													<Skeleton count={1} />
+	// 												</div>
+	// 											</div>
+	// 										</div>
+	// 									</div>
+	// 								</div>
+	// 								<div className="w-[60px] flex items-center justify-between">
+	// 									<Skeleton count={1} />
+	// 								</div>
+	// 							</div>
+	// 							<div className="mt-2 p-2 bg-white flex justify-between">
+	// 								{/*  Cược chấp */}
+	// 								<div className="w-[80px] text-center">
+	// 									<div className="text-secondary text-sm font-semibold mb-1.5">
+	// 										Cược chấp
+	// 									</div>
+	// 									<div className="flex items-center justify-between text-sm bg-light p-1">
+	// 										<div>
+	// 											<Skeleton count={1} />
+	// 										</div>
+	// 										<div className="flex items-center gap-x-1 font-bold">
+	// 											<span>
+	// 												<Skeleton count={1} />
+	// 											</span>
+	// 										</div>
+	// 									</div>
+	// 									<div className="flex items-center justify-between text-sm bg-light p-1 mt-1">
+	// 										<div>
+	// 											<Skeleton count={1} />
+	// 										</div>
+	// 										<div className="flex items-center gap-x-1 font-bold">
+	// 											<span>
+	// 												<Skeleton count={1} />
+	// 											</span>
+	// 										</div>
+	// 									</div>
+	// 								</div>
 
-	const handleFilterByLeague = () => {
-		setPageIndex(1);
-		setFiltering(true);
-		getData(true);
-		setShowFilterLeague(false);
-	};
+	// 								{/*  Tài xỉu */}
+	// 								<div className="w-[80px] text-center">
+	// 									<div className="text-secondary text-sm font-semibold mb-1.5">
+	// 										Tài xỉu
+	// 									</div>
+	// 									<div className="flex items-center justify-between text-sm bg-light p-1">
+	// 										<div>
+	// 											<Skeleton count={1} />
+	// 										</div>
+	// 										<div className="flex items-center gap-x-1 font-bold">
+	// 											<span>
+	// 												<Skeleton count={1} />
+	// 											</span>
+	// 										</div>
+	// 									</div>
+	// 									<div className="flex items-center justify-between text-sm bg-light p-1 mt-1">
+	// 										<div>
+	// 											<Skeleton count={1} />
+	// 										</div>
+	// 										<div className="flex items-center gap-x-1 font-bold">
+	// 											<span>
+	// 												<Skeleton count={1} />
+	// 											</span>
+	// 										</div>
+	// 									</div>
+	// 								</div>
 
-	const Loading = () => {
-		return new Array(5).fill(5).map((item) => {
-			return (
-				<div key={item?._id} className="mt-6">
-					<div className="bg-secondary px-4 py-2 border-b-2 border-primary text-white text-sm flex items-center justify-between">
-						{user?.leagues?.includes(item?._id) ? (
-							<ButtonOnlyIcon onClick={() => handleUnLikeLeague(item?._id)}>
-								<AiFillStar color={"#ffad01"} size={24} />
-							</ButtonOnlyIcon>
-						) : (
-							<ButtonOnlyIcon onClick={() => handleLikeLeague(item?._id)}>
-								<IconStar color="#ffffff" />
-							</ButtonOnlyIcon>
-						)}
-					</div>
-					{new Array(2).fill(2).map((x, index) => {
-						return (
-							<div
-								className="p-4 bg-[#F4F5F6] border-b-2 border-[#DFDFDF]"
-								key={index}
-							>
-								<div className="flex items-center justify-between gap-x-4">
-									<div className="flex items-center gap-x-4 w-full sm:w-1/2">
-										<div className="text-sm">
-											<div>
-												<Skeleton count={1} />
-											</div>
-											<div>
-												<Skeleton count={1} />
-											</div>
-										</div>
-										<div className="flex items-center justify-between gap-x-2 w-full">
-											<div className="flex items-center gap-x-2 w-full">
-												<div>
-													<Skeleton count={1} />
-												</div>
+	// 								{/* HT */}
+	// 								<div className="flex flex-col justify-end min-h-full gap-y-2">
+	// 									<div className="gap-x-2 items-center justify-between flex text-xs text-secondary-light">
+	// 										<span>HT</span>
+	// 										<span>
+	// 											<Skeleton count={1} />
+	// 										</span>
+	// 									</div>
+	// 									<div className="gap-x-2 flex items-center justify-between text-xs text-secondary-light">
+	// 										<IconCornerKick />
+	// 										<span>
+	// 											<Skeleton count={1} />
+	// 										</span>
+	// 									</div>
+	// 								</div>
 
-												<div className="text-xs font-semibold">
-													<div>
-														<Skeleton count={1} />
-													</div>
-													<div className="mt-2">
-														<Skeleton count={1} />
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div className="w-[60px] flex items-center justify-between">
-										<Skeleton count={1} />
-									</div>
-								</div>
-								<div className="mt-2 p-2 bg-white flex justify-between">
-									{/*  Cược chấp */}
-									<div className="w-[80px] text-center">
-										<div className="text-secondary text-sm font-semibold mb-1.5">
-											Cược chấp
-										</div>
-										<div className="flex items-center justify-between text-sm bg-light p-1">
-											<div>
-												<Skeleton count={1} />
-											</div>
-											<div className="flex items-center gap-x-1 font-bold">
-												<span>
-													<Skeleton count={1} />
-												</span>
-											</div>
-										</div>
-										<div className="flex items-center justify-between text-sm bg-light p-1 mt-1">
-											<div>
-												<Skeleton count={1} />
-											</div>
-											<div className="flex items-center gap-x-1 font-bold">
-												<span>
-													<Skeleton count={1} />
-												</span>
-											</div>
-										</div>
-									</div>
-
-									{/*  Tài xỉu */}
-									<div className="w-[80px] text-center">
-										<div className="text-secondary text-sm font-semibold mb-1.5">
-											Tài xỉu
-										</div>
-										<div className="flex items-center justify-between text-sm bg-light p-1">
-											<div>
-												<Skeleton count={1} />
-											</div>
-											<div className="flex items-center gap-x-1 font-bold">
-												<span>
-													<Skeleton count={1} />
-												</span>
-											</div>
-										</div>
-										<div className="flex items-center justify-between text-sm bg-light p-1 mt-1">
-											<div>
-												<Skeleton count={1} />
-											</div>
-											<div className="flex items-center gap-x-1 font-bold">
-												<span>
-													<Skeleton count={1} />
-												</span>
-											</div>
-										</div>
-									</div>
-
-									{/* HT */}
-									<div className="flex flex-col justify-end min-h-full gap-y-2">
-										<div className="gap-x-2 items-center justify-between flex text-xs text-secondary-light">
-											<span>HT</span>
-											<span>
-												<Skeleton count={1} />
-											</span>
-										</div>
-										<div className="gap-x-2 flex items-center justify-between text-xs text-secondary-light">
-											<IconCornerKick />
-											<span>
-												<Skeleton count={1} />
-											</span>
-										</div>
-									</div>
-
-									{/*  Data */}
-									<div className="text-center flex flex-col relative">
-										<div className="text-secondary text-sm font-semibold mb-1.5">
-											Data
-										</div>
-										<div className="flex items-center justify-between gap-x-1 h-full">
-											<div className="bg-secondary">
-												<Skeleton count={1} />
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						);
-					})}
-				</div>
-			);
-		});
-	};
+	// 								{/*  Data */}
+	// 								<div className="text-center flex flex-col relative">
+	// 									<div className="text-secondary text-sm font-semibold mb-1.5">
+	// 										Data
+	// 									</div>
+	// 									<div className="flex items-center justify-between gap-x-1 h-full">
+	// 										<div className="bg-secondary">
+	// 											<Skeleton count={1} />
+	// 										</div>
+	// 									</div>
+	// 								</div>
+	// 							</div>
+	// 						</div>
+	// 					);
+	// 				})}
+	// 			</div>
+	// 		);
+	// 	});
+	// };
 
 	return (
 		<>
@@ -776,7 +747,7 @@ function ListMatchesHome() {
 								</>
 							) : (
 								<>
-									<ListMatchHomeItem
+									{/* <ListMatchHomeItem
 										isGroup={Boolean(showBy === "league")}
 										matchThesport={[]}
 										matchGroupLeague={item}
@@ -791,14 +762,14 @@ function ListMatchesHome() {
 										handleLikeMatch={handleLikeMatch}
 										handleUnLikeMatch={handleUnLikeMatch}
 										handleNavigate={handleNavigate}
-									/>
+									/> */}
 								</>
 							)}
 						</>
 					))}
 				</div>
 
-				{(loading || loadingMore) && <Loading />}
+				{/* {(loading || loadingMore) && <Loading />} */}
 			</div>
 			{/* filter list matches */}
 			{/* <FilterListMatchesHome
