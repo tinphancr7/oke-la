@@ -307,35 +307,8 @@ function ListMatchesHome() {
 	};
 
 	useEffect(() => {
-		getData();
+		// getData();
 	}, [tab, showBy, date]);
-
-	useEffect(() => {
-		const getLeagues = async () => {
-			try {
-				const result = await getLeagueHaveMatch(
-					"",
-					tab === 1 ? "live" : tab === 2 ? "hot" : tab === 4 ? "finished" : ""
-				);
-				setListLeague(
-					(result.data?.result || [])?.sort((a: any, b: any) => {
-						const A = topLeague?.find((e) => e?.leagueId === a?._id) ? 2 : 1;
-						const B = topLeague?.find((e) => e?.leagueId === b?._id) ? 2 : 1;
-
-						return B - A;
-					})
-				);
-
-				setListChosenLeague(
-					(result.data?.result || [])?.map((item: any) => item?._id)
-				);
-				setFiltering(false);
-			} catch (error) {
-				console.log(error);
-			}
-		};
-		getLeagues();
-	}, [tab]);
 
 	const handleLikeMatch = async (matchId: string) => {
 		try {
