@@ -21,9 +21,6 @@ import {toast} from "react-toastify";
 import {likeLeague, likeMatch, unLikeMatch, unlikeLeague} from "@/apis/user";
 import {useRouter} from "next/router";
 import {AiFillStar} from "react-icons/ai";
-import FilterListMatchesHome from "./FilterListMatchesHome";
-import {getLeagueHaveMatch} from "@/apis/league";
-import {topLeague} from "@/constant";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import ListMatchesHomeMobile from "./ListMatchesHomeMobile";
@@ -58,12 +55,8 @@ function ListMatchesHome() {
 	const {user, updateAuthUser} = useContext(AuthContext);
 
 	const router = useRouter();
-
-	const [playingMatches, setPlayingMatches] = useState<any[]>([]);
 	const [todayMatches, setTodayMatches] = useState<any[]>([]);
-	const [todayRateMatches, setTodayRateMatches] = useState<any[]>([]);
-	const [upcomingMatches, setUpcomingHotMatches] = useState<any[]>([]);
-	const [finishedMatches, setFinishMatches] = useState<any[]>([]);
+
 	const [pageSize, setPageSize] = useState(5);
 	const [pageIndex, setPageIndex] = useState(1);
 	const [hasmore, setHasmore] = useState(false);
@@ -74,34 +67,6 @@ function ListMatchesHome() {
 
 	const [showBy, setShowBy] = useState<"league" | "time">("league");
 	const [date, setDate] = useState(new Date());
-
-	const getDataPlayingMatches = async (isFiltering = false) => {
-		try {
-			setLoading(true);
-			const playingMatchesRes = await getPlayingMatchGroupLeague(
-				1,
-				showBy === "league" ? pageSize : 9999,
-				searchMatch
-			);
-
-			setPlayingMatches(playingMatchesRes?.data?.result);
-
-			setUpcomingHotMatches([]);
-
-			setFinishMatches([]);
-			setTodayMatches([]);
-			setPageIndex(1);
-			if (pageIndex >= playingMatchesRes?.data?.totalPage) {
-				setHasmore(false);
-			} else {
-				setHasmore(true);
-			}
-		} catch (error) {
-			console.log(error);
-		} finally {
-			setLoading(false);
-		}
-	};
 
 	const getDataTodayMatches = async (isFiltering = false) => {
 		try {
@@ -115,99 +80,6 @@ function ListMatchesHome() {
 
 			getMatchesByDateGroupLeagueNext(2);
 			setTodayMatches(todayMatchesRes?.data?.result);
-			setTodayRateMatches([]);
-
-			setFinishMatches([]);
-			setUpcomingHotMatches([]);
-			setPlayingMatches([]);
-			setPageIndex(1);
-			if (pageIndex >= todayMatchesRes?.data?.totalPage) {
-				setHasmore(false);
-			} else {
-				setHasmore(true);
-			}
-		} catch (error) {
-			console.log(error);
-		} finally {
-			setLoading(false);
-		}
-	};
-	const getDataTodayRateMatches = async (isFiltering = false) => {
-		try {
-			setLoading(true);
-			const todayRateMatchesRes = await getMatchesByDateGroupRateLeague(
-				1,
-				showBy === "league" ? pageSize : 9999,
-				moment(date).format("YYYY-MM-DD"),
-				searchMatch
-			);
-
-			getMatchesByDateGroupLeagueNext(2);
-			setTodayRateMatches(todayRateMatchesRes?.data?.result);
-			setTodayMatches([]);
-
-			setFinishMatches([]);
-			setUpcomingHotMatches([]);
-			setPlayingMatches([]);
-			setPageIndex(1);
-			if (pageIndex >= todayRateMatchesRes?.data?.totalPage) {
-				setHasmore(false);
-			} else {
-				setHasmore(true);
-			}
-		} catch (error) {
-			console.log(error);
-		} finally {
-			setLoading(false);
-		}
-	};
-
-	const getDataFinishMatch = async (isFiltering = false) => {
-		try {
-			setLoading(true);
-			const finishedMatchesRes = await getFinishedMatchesGroupLeague(
-				1,
-				showBy === "league" ? pageSize : 9999,
-				moment(date).format("YYYY-MM-DD"),
-				searchMatch
-			);
-
-			setFinishMatches(finishedMatchesRes?.data?.result || []);
-
-			setUpcomingHotMatches([]);
-
-			setPlayingMatches([]);
-			setTodayMatches([]);
-			setTodayRateMatches([]);
-			setPageIndex(1);
-			if (pageIndex >= finishedMatchesRes?.data?.totalPage) {
-				setHasmore(false);
-			} else {
-				setHasmore(true);
-			}
-		} catch (error) {
-			console.log(error);
-		} finally {
-			setLoading(false);
-		}
-	};
-
-	const getDataUpcomingMatches = async (isFiltering = false) => {
-		try {
-			setLoading(true);
-			const todayMatchesRes = await getUpcomingMatchesGroupLeague(
-				1,
-				showBy === "league" ? pageSize : 9999,
-				moment(date).format("YYYY-MM-DD"),
-				searchMatch
-			);
-
-			setUpcomingHotMatches(todayMatchesRes?.data?.result);
-
-			setFinishMatches([]);
-			setTodayMatches([]);
-			setTodayRateMatches([]);
-			setPlayingMatches([]);
 			setPageIndex(1);
 			if (pageIndex >= todayMatchesRes?.data?.totalPage) {
 				setHasmore(false);
@@ -222,17 +94,7 @@ function ListMatchesHome() {
 	};
 
 	const getData = async (filtering = false) => {
-		if (tab == 3) {
-			getDataUpcomingMatches(filtering);
-		} else if (tab === 2) {
-			getDataTodayRateMatches(filtering);
-		} else if (tab == 1) {
-			getDataPlayingMatches(filtering);
-		} else if (tab == 4) {
-			getDataFinishMatch(filtering);
-		} else {
-			getDataTodayMatches(filtering);
-		}
+		getDataTodayMatches(filtering);
 	};
 
 	const getMatchesByDateGroupLeagueNext = async (page) => {
@@ -247,50 +109,15 @@ function ListMatchesHome() {
 		try {
 			setLoadingMore(true);
 
-			let result: any;
+			let result = await getMatchesByDateGroupLeague(
+				page,
+				pageSize,
+				moment(date).format("YYYY-MM-DD"),
+				searchMatch
+			);
+			// getMatchesByDateGroupLeagueNext(page + 1);
 
-			if (tab === 3) {
-				result = await getUpcomingMatchesGroupLeague(
-					page,
-					pageSize,
-					moment(date).format("YYYY-MM-DD"),
-					searchMatch
-				);
-
-				setUpcomingHotMatches((prev) => [...prev, ...result?.data?.result]);
-			} else if (tab === 1) {
-				result = await getPlayingMatchGroupLeague(page, pageSize, searchMatch);
-
-				setPlayingMatches((prev) => [...prev, ...result?.data?.result]);
-			} else if (tab === 2) {
-				result = await getMatchesByDateGroupRateLeague(
-					page,
-					pageSize,
-					moment(date).format("YYYY-MM-DD"),
-					searchMatch
-				);
-
-				setTodayRateMatches((prev) => [...prev, ...result?.data?.result]);
-			} else if (tab === 4) {
-				result = await getFinishedMatchesGroupLeague(
-					page,
-					pageSize,
-					moment(date).format("YYYY-MM-DD"),
-					searchMatch
-				);
-
-				setFinishMatches((prev) => [...prev, ...result?.data?.result]);
-			} else {
-				result = await getMatchesByDateGroupLeague(
-					page,
-					pageSize,
-					moment(date).format("YYYY-MM-DD"),
-					searchMatch
-				);
-				getMatchesByDateGroupLeagueNext(page + 1);
-
-				setTodayMatches((prev) => [...prev, ...result?.data?.result]);
-			}
+			setTodayMatches((prev) => [...prev, ...result?.data?.result]);
 
 			if (page >= result?.data?.totalPage) {
 				setHasmore(false);
@@ -411,26 +238,10 @@ function ListMatchesHome() {
 	];
 
 	const genDataMatches = useMemo(() => {
-		if (tab === 1) return playingMatches;
-		if (tab === 2) {
-			return todayRateMatches;
-		}
-
-		if (tab === 3) return upcomingMatches;
-
-		if (tab === 4) return finishedMatches;
-
 		if (tab === 0) return todayMatches;
 
 		return [];
-	}, [
-		tab,
-		playingMatches,
-		todayMatches,
-		todayRateMatches,
-		finishedMatches,
-		upcomingMatches,
-	]);
+	}, [tab, todayMatches]);
 
 	const Loading = () => {
 		return new Array(5).fill(5).map((item) => {
@@ -699,53 +510,26 @@ function ListMatchesHome() {
 				<div className="mt-4">
 					{(loading ? [] : genDataMatches)?.map((item) => (
 						<>
-							{tab === 2 ? (
-								<>
-									<div className="hidden lg:block">
-										<ListMatchOddHomeItem
-											isGroup={Boolean(showBy === "league")}
-											matchThesport={[]}
-											matchGroupLeague={item}
-											key={item?._id}
-										/>
-									</div>
-									<div className="block lg:hidden">
-										<ListMatchesOddHomeMobile
-											isGroup={Boolean(showBy === "league")}
-											key={item?._id}
-											item={item}
-											handleLikeLeague={handleLikeLeague}
-											handleUnLikeLeague={handleUnLikeLeague}
-											handleLikeMatch={handleLikeMatch}
-											handleUnLikeMatch={handleUnLikeMatch}
-											handleNavigate={handleNavigate}
-										/>
-									</div>
-								</>
-							) : (
-								<>
-									<div className="hidden lg:block">
-										<ListMatchHomeItem
-											isGroup={Boolean(showBy === "league")}
-											matchThesport={[]}
-											matchGroupLeague={item}
-											key={item?._id}
-										/>
-									</div>
-									<div className="block lg:hidden">
-										<ListMatchesHomeMobile
-											isGroup={Boolean(showBy === "league")}
-											key={item?._id}
-											item={item}
-											handleLikeLeague={handleLikeLeague}
-											handleUnLikeLeague={handleUnLikeLeague}
-											handleLikeMatch={handleLikeMatch}
-											handleUnLikeMatch={handleUnLikeMatch}
-											handleNavigate={handleNavigate}
-										/>
-									</div>
-								</>
-							)}
+							<div className="hidden lg:block">
+								<ListMatchHomeItem
+									isGroup={Boolean(showBy === "league")}
+									matchThesport={[]}
+									matchGroupLeague={item}
+									key={item?._id}
+								/>
+							</div>
+							<div className="block lg:hidden">
+								<ListMatchesHomeMobile
+									isGroup={Boolean(showBy === "league")}
+									key={item?._id}
+									item={item}
+									handleLikeLeague={handleLikeLeague}
+									handleUnLikeLeague={handleUnLikeLeague}
+									handleLikeMatch={handleLikeMatch}
+									handleUnLikeMatch={handleUnLikeMatch}
+									handleNavigate={handleNavigate}
+								/>
+							</div>
 						</>
 					))}
 				</div>
