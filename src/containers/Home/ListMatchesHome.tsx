@@ -307,7 +307,7 @@ function ListMatchesHome() {
 	};
 
 	useEffect(() => {
-		// getData();
+		getData();
 	}, [tab, showBy, date]);
 
 	const handleLikeMatch = async (matchId: string) => {
@@ -701,7 +701,7 @@ function ListMatchesHome() {
 						<>
 							{tab === 2 ? (
 								<>
-									{/* <div className="hidden lg:block">
+									<div className="hidden lg:block">
 										<ListMatchOddHomeItem
 											isGroup={Boolean(showBy === "league")}
 											matchThesport={[]}
@@ -720,19 +720,19 @@ function ListMatchesHome() {
 											handleUnLikeMatch={handleUnLikeMatch}
 											handleNavigate={handleNavigate}
 										/>
-									</div> */}
+									</div>
 								</>
 							) : (
 								<>
-									{/* <div className="hidden lg:block">
+									<div className="hidden lg:block">
 										<ListMatchHomeItem
 											isGroup={Boolean(showBy === "league")}
 											matchThesport={[]}
 											matchGroupLeague={item}
 											key={item?._id}
 										/>
-									</div> */}
-									{/* <div className="block lg:hidden">
+									</div>
+									<div className="block lg:hidden">
 										<ListMatchesHomeMobile
 											isGroup={Boolean(showBy === "league")}
 											key={item?._id}
@@ -743,7 +743,7 @@ function ListMatchesHome() {
 											handleUnLikeMatch={handleUnLikeMatch}
 											handleNavigate={handleNavigate}
 										/>
-									</div> */}
+									</div>
 								</>
 							)}
 						</>
