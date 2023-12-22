@@ -124,7 +124,7 @@ function ListMatchesHome() {
 	};
 
 	useEffect(() => {
-		getData();
+		// getData();
 	}, [tab, showBy, date]);
 
 	const handleLikeMatch = async (matchId: string) => {

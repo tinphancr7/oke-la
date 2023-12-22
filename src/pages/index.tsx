@@ -6,20 +6,6 @@ import LeagueOtherHome from "@/containers/Home/LeagueOtherHome";
 import ListMatchesHome from "@/containers/Home/ListMatchesHome";
 import MyFavouriteLeagues from "@/containers/Home/MyFavouriteLeagues";
 
-// const UserRankTableV2 = dynamic(() => import("@/components/UserRankTableV2"));
-// const ChatRankHome = dynamic(() => import("@/containers/Home/ChatRankHome"));
-// const GetPromotion = dynamic(() => import("@/containers/Home/GetPromotion"));
-// const HotLeagueHome = dynamic(() => import("@/containers/Home/HotLeagueHome"));
-// const LeagueOtherHome = dynamic(
-// 	() => import("@/containers/Home/LeagueOtherHome")
-// );
-// const ListMatchesHome = dynamic(
-// 	() => import("@/containers/Home/ListMatchesHome")
-// );
-// const MyFavouriteLeagues = dynamic(
-// 	() => import("@/containers/Home/MyFavouriteLeagues")
-// );
-
 function HomePage() {
 	return (
 		<>
@@ -38,7 +24,7 @@ function HomePage() {
 
 							<HotLeagueHomeMobile /> */}
 
-							{/* <ListMatchesHome /> */}
+							<ListMatchesHome />
 						</div>
 						<div className="hidden lg:block col-span-12 lg:col-span-3 ">
 							<div className="sticky top-24">
