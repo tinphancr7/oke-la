@@ -14,6 +14,7 @@ const ListMatchLiveHome = ({
 	handleUnLikeMatch,
 	handleNavigate,
 	Loading,
+	search,
 }: any) => {
 	const {
 		status,
@@ -25,12 +26,13 @@ const ListMatchLiveHome = ({
 		fetchNextPage,
 		hasNextPage,
 	} = useInfiniteQuery({
-		queryKey: ["listMatchesLive", moment(date).format("YYYY-MM-DD")],
+		queryKey: ["listMatchesLive", moment(date).format("YYYY-MM-DD"), search],
 		queryFn: async ({pageParam}) => {
 			const res = await getPlayingMatchGroupLeague(
 				pageParam,
 				5,
-				moment(date).format("YYYY-MM-DD")
+				moment(date).format("YYYY-MM-DD"),
+				search.trim("")
 			);
 
 			return res?.data;

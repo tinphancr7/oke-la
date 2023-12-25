@@ -61,7 +61,7 @@ const tabs = [
 		title: "ĐÃ KẾT THÚC",
 	},
 ];
-function ListMatchesHome() {
+function ListMatchesHome({searchMatch}: {searchMatch: string}) {
 	const [tab, setTab] = useState(0);
 	const {user, updateAuthUser} = useContext(AuthContext);
 	const router = useRouter();
@@ -299,6 +299,7 @@ function ListMatchesHome() {
 						handleUnLikeMatch={handleUnLikeMatch}
 						handleNavigate={handleNavigate}
 						Loading={Loading}
+						search={searchMatch}
 					/>
 				);
 			case 2:
@@ -311,6 +312,7 @@ function ListMatchesHome() {
 						handleUnLikeMatch={handleUnLikeMatch}
 						handleNavigate={handleNavigate}
 						Loading={Loading}
+						search={searchMatch}
 					/>
 				);
 			case 3:
@@ -323,6 +325,7 @@ function ListMatchesHome() {
 						handleUnLikeMatch={handleUnLikeMatch}
 						handleNavigate={handleNavigate}
 						Loading={Loading}
+						search={searchMatch}
 					/>
 				);
 			case 4:
@@ -335,6 +338,7 @@ function ListMatchesHome() {
 						handleUnLikeMatch={handleUnLikeMatch}
 						handleNavigate={handleNavigate}
 						Loading={Loading}
+						search={searchMatch}
 					/>
 				);
 			default:
@@ -347,6 +351,7 @@ function ListMatchesHome() {
 						handleUnLikeMatch={handleUnLikeMatch}
 						handleNavigate={handleNavigate}
 						Loading={Loading}
+						search={searchMatch}
 					/>
 				);
 		}

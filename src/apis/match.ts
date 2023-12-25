@@ -3,10 +3,11 @@ import {axiosInstanceISport, axiosInstanceISportAuth} from ".";
 export const getPlayingMatchGroupLeague = (
 	pageIndex: number,
 	pageSize: number,
+	date: string,
 	search: string
 ) =>
 	axiosInstanceISportAuth.get(
-		`/getPlayingMatchesGroupLeague?pageIndex=${pageIndex}&pageSize=${pageSize}`
+		`/getPlayingMatchesGroupLeague?pageIndex=${pageIndex}&pageSize=${pageSize}&date=${date}&search=${search}`
 	);
 
 export const getMatchesByDate = (
@@ -52,7 +53,7 @@ export const getMatchesByDateGroupLeague = (
 	search: string = ""
 ) =>
 	axiosInstanceISportAuth.get(
-		`/getScheduleAndResultByDateGroupLeague?pageIndex=${pageIndex}&pageSize=${pageSize}&date=${date}`
+		`/getScheduleAndResultByDateGroupLeague?pageIndex=${pageIndex}&pageSize=${pageSize}&date=${date}&search=${search}`
 	);
 export const getMatchesByDateGroupRateLeague = (
 	pageIndex: number,
@@ -61,7 +62,7 @@ export const getMatchesByDateGroupRateLeague = (
 	search: string = ""
 ) =>
 	axiosInstanceISportAuth.get(
-		`/getScheduleAndResultByDateGroupRateLeague?pageIndex=${pageIndex}&pageSize=${pageSize}&date=${date}`
+		`/getScheduleAndResultByDateGroupRateLeague?pageIndex=${pageIndex}&pageSize=${pageSize}&date=${date}&search=${search}`
 	);
 
 export const getHotMatchesGroupLeague = (

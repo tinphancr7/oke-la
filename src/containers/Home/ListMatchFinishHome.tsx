@@ -14,6 +14,7 @@ const ListMatchFinishHome = ({
 	handleUnLikeMatch,
 	handleNavigate,
 	Loading,
+	search,
 }: any) => {
 	const {
 		status,
@@ -25,18 +26,20 @@ const ListMatchFinishHome = ({
 		fetchNextPage,
 		hasNextPage,
 	} = useInfiniteQuery({
-		queryKey: ["listMatchesFinish", moment(date).format("YYYY-MM-DD")],
+		queryKey: ["listMatchesFinish", moment(date).format("YYYY-MM-DD"), search],
 		queryFn: async ({pageParam}) => {
 			const res = await getFinishedMatchesGroupLeague(
 				pageParam,
 				5,
-				moment(date).format("YYYY-MM-DD")
+				moment(date).format("YYYY-MM-DD"),
+				search.trim("")
 			);
 
 			return res?.data;
 		},
 		initialPageParam: 1,
 		getNextPageParam: (lastPage) => {
+			console.log("lastPage", lastPage);
 			return lastPage?.pageIndex ? lastPage?.pageIndex + 1 : undefined;
 		},
 	});

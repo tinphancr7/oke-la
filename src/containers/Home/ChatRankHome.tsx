@@ -69,6 +69,7 @@ function ChatRankHome({home = false}: Props) {
 		const fetchData = async () => {
 			try {
 				const data = await getRankUsers(typeRankUser);
+
 				setRankUsers(data?.data?.result);
 			} catch (error) {
 				console.log(error);
