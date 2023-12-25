@@ -76,7 +76,7 @@ const MatchLive = ({match, matchId, room, messages}: any) => {
 		return position == "home" ? (
 			<div className="flex items-center   mt-4">
 				<div className=" w-[45%] flex-1  flex justify-end">
-					<div className="flex w-full  bg-white shadow-lg rounded-lg p-2 items-center">
+					<div className="flex w-fit justify-end  bg-white shadow-lg rounded-lg p-2 items-center">
 						<div className="relative w-4 h-4 lg:w-6 lg:h-6 flex-shrink-0">
 							<Image className="object-contain" src={image} fill alt="" />
 						</div>
@@ -101,7 +101,7 @@ const MatchLive = ({match, matchId, room, messages}: any) => {
 					</p>
 				</div>
 				<div className="w-[45%]  flex justify-start">
-					<div className="flex  w-full  bg-white shadow-lg rounded-lg p-2 items-center">
+					<div className="flex  w-fit  bg-white shadow-lg rounded-lg p-2 items-center">
 						<div className="relative w-4 h-4 lg:w-6 lg:h-6 flex-shrink-0">
 							<Image className="object-contain" src={image} fill alt="" />
 						</div>
