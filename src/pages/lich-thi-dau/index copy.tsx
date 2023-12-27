@@ -20,8 +20,6 @@ import {BsChevronDown} from "react-icons/bs";
 import RankTable from "@/components/rankTable";
 import ListMatchLeagueRound from "@/containers/Schedule/ListMatchLeagueRound";
 import Image from "next/image";
-import Heading from "@/components/heading/Heading";
-import {Pagination} from "antd";
 
 const Schedule = () => {
 	const [leagues, setLeagues] = useState<any>({});
@@ -117,7 +115,6 @@ const Schedule = () => {
 			};
 		});
 	}, [leagues]);
-	// console.log("treeData", treeData);
 
 	useEffect(() => {
 		getLeagues();
@@ -210,73 +207,6 @@ const Schedule = () => {
 						</div>
 					</div>
 					<div className="w-full lg:w-[80%]">
-						<div className="rounded-xl shadow bg-[#F1F1F1] border border-[#E4E4E4] p-4 mb-6">
-							<Heading className=" pb-5">Vòng</Heading>
-							{/* <div className="w-full pb-4 lg:block hidden">
-								<Pagination pageSize={10} totalPage={10} setPageIndex={10} />
-							</div>
-							<div className="w-full pb-4 lg:hidden block">
-								<Pagination pageSize={5} totalPage={5} setPageIndex={10} />
-							</div> */}
-							<div>
-								<Heading className="">Trận cầu vòng 28</Heading>
-								<div>
-									{schedulesData?.length === 0 ? (
-										<div className="flex items-center justify-center text-red-500 font-semibold text-base uppercase">
-											không có dữ liệu
-										</div>
-									) : (
-										schedulesData?.map((schedule: any, index: number) => (
-											<div key={index} className="bg-white w-full border-b">
-												<div className="flex items-center p-4 ">
-													<div className="text-xs text-black11 w-[20%] flex items-center flex-col lg:flex-row gap-1">
-														{formatDate(schedule?.matchTime)}
-													</div>
-													<div className="flex items-center justify-center text-xs font-normal text-black11 w-[60%] gap-4 flex-col lg:flex-row">
-														<div className="flex items-center gap-2 w-[45%] justify-end">
-															<span className="hidden lg:block">
-																{schedule?.homeName}
-															</span>
-															<div className="w-7 h-7 bg-[#F4F5F6] rounded-full flex items-center justify-center">
-																<div className="w-6 h-6 relative flex-shrink-0">
-																	<Image
-																		src={schedule?.homeIcon}
-																		fill
-																		className="w-full h-full object-fill"
-																		alt=""
-																	/>
-																</div>
-															</div>
-														</div>
-														<span className="hidden lg:inline-flex items-center justify-center w-[10%]">
-															v
-														</span>
-														<div className="flex items-center gap-2 w-[45%] ">
-															<div className="w-7 h-7 bg-[#F4F5F6] rounded-full flex items-center justify-center">
-																<div className="w-6 h-6 relative flex-shrink-0">
-																	<Image
-																		src={schedule?.awayIcon}
-																		fill
-																		className="w-full h-full object-fill"
-																		alt=""
-																	/>
-																</div>
-															</div>
-															<span>{schedule?.awayName}</span>
-														</div>
-													</div>
-													<div className="w-[20%] flex items-center justify-end">
-														<div className="text-black00 text-xs font-bold border-b inline-flex border-black00 ">
-															Chi tiết
-														</div>
-													</div>
-												</div>
-											</div>
-										))
-									)}
-								</div>
-							</div>
-						</div>
 						<div className="league-detail-menu">
 							{league && (
 								<div className="league-detail-header flex flex-col-reverse lg:flex-row gap-4">

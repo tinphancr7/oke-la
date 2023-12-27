@@ -39,7 +39,7 @@ const MatchHomeItem = ({
 			queryFn: () => getMatchById(matchId as any),
 		});
 		await queryClient.prefetchQuery({
-			queryKey: ["events"],
+			queryKey: ["events", matchId],
 			queryFn: () => getEvent(matchId.toString()),
 		});
 		await queryClient.prefetchQuery({

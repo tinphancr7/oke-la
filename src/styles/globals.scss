@@ -3,7 +3,8 @@
 @tailwind utilities;
 @import "_variables.scss";
 
-:root {}
+:root {
+}
 
 @font-face {
 	font-family: "SVN-Gilroy";
@@ -31,7 +32,8 @@
 }
 
 @media (prefers-color-scheme: dark) {
-	:root {}
+	:root {
+	}
 }
 
 @mixin shadow-forbox {
@@ -469,8 +471,8 @@ body {
 	}
 
 	& li.selected a {
-		background-color: #a95e01;
-		border-color: #a95e01;
+		background-color: #0c323d;
+		border-color: #0c323d;
 		color: #fff;
 	}
 
@@ -548,7 +550,6 @@ table {
 }
 
 .table-odd-home {
-
 	th,
 	td {
 		border: 1px solid $light-3;
@@ -1438,8 +1439,8 @@ table {
 	margin-top: 5px;
 }
 
-.match_card .match_body>div:first-child,
-.match_card .match_body>div:nth-child(3) {
+.match_card .match_body > div:first-child,
+.match_card .match_body > div:nth-child(3) {
 	width: 33%;
 }
 
@@ -1517,7 +1518,12 @@ table {
 	margin: "0px 10px";
 }
 
-.match_card .match_body .match_status .happening .current_result span:nth-child(2) {
+.match_card
+	.match_body
+	.match_status
+	.happening
+	.current_result
+	span:nth-child(2) {
 	width: 0.75em;
 	height: 0.75em;
 	padding: 0.25em;
@@ -2247,9 +2253,11 @@ table {
 
 .main-event-table thead tr:first-child {
 	background: rgb(245, 170, 0);
-	background: linear-gradient(90deg,
-			rgba(245, 170, 0, 1) 0%,
-			rgba(0, 59, 255, 1) 100%);
+	background: linear-gradient(
+		90deg,
+		rgba(245, 170, 0, 1) 0%,
+		rgba(0, 59, 255, 1) 100%
+	);
 }
 
 .main-event-table thead tr:first-child th {
@@ -2376,7 +2384,6 @@ table {
 }
 
 .details-match {
-
 	div,
 	h1,
 	h2,
@@ -2422,7 +2429,7 @@ table {
 		float: left;
 	}
 
-	.fbheader>div {
+	.fbheader > div {
 		text-align: center;
 	}
 
@@ -4826,7 +4833,8 @@ table {
 		border-bottom: 1px solid #e5e5e5;
 	}
 
-	.fx20 .stat h4 span {}
+	.fx20 .stat h4 span {
+	}
 
 	.stat .fx-tb-title {
 		text-align: center;
@@ -5003,7 +5011,6 @@ table {
 }
 
 @media screen and (min-width: 1080px) {
-
 	#chart-component-list-chart .swiper,
 	#list-newest-videos .swiper,
 	#gallary-news .swiper,
@@ -5013,7 +5020,6 @@ table {
 }
 
 @media screen and (min-width: 768px) {
-
 	#chart-component-list-chart .swiper,
 	#list-newest-videos .swiper,
 	#gallary-news .swiper,
@@ -5054,9 +5060,9 @@ table {
 		display: block !important;
 	}
 
-	.match_card .match_body>div:first-child,
-	.match_card .match_body>div:nth-child(2),
-	.match_card .match_body>div:nth-child(3) {
+	.match_card .match_body > div:first-child,
+	.match_card .match_body > div:nth-child(2),
+	.match_card .match_body > div:nth-child(3) {
 		width: 50%;
 	}
 
@@ -5300,23 +5306,61 @@ table {
 	text-align: center;
 }
 
-.time-score:where(.css-dev-only-do-not-override-yp8pcc).ant-table-wrapper .ant-table.ant-table-small .ant-table-title,
-:where(.css-dev-only-do-not-override-yp8pcc).ant-table-wrapper .ant-table.ant-table-small .ant-table-footer,
-:where(.css-dev-only-do-not-override-yp8pcc).ant-table-wrapper .ant-table.ant-table-small .ant-table-thead>tr>th,
-:where(.css-dev-only-do-not-override-yp8pcc).ant-table-wrapper .ant-table.ant-table-small .ant-table-tbody>tr>th,
-:where(.css-dev-only-do-not-override-yp8pcc).ant-table-wrapper .ant-table.ant-table-small .ant-table-tbody>tr>td,
-:where(.css-dev-only-do-not-override-yp8pcc).ant-table-wrapper .ant-table.ant-table-small tfoot>tr>th,
-:where(.css-dev-only-do-not-override-yp8pcc).ant-table-wrapper .ant-table.ant-table-small tfoot>tr>td {
+.time-score:where(.css-dev-only-do-not-override-yp8pcc).ant-table-wrapper
+	.ant-table.ant-table-small
+	.ant-table-title,
+:where(.css-dev-only-do-not-override-yp8pcc).ant-table-wrapper
+	.ant-table.ant-table-small
+	.ant-table-footer,
+:where(.css-dev-only-do-not-override-yp8pcc).ant-table-wrapper
+	.ant-table.ant-table-small
+	.ant-table-thead
+	> tr
+	> th,
+:where(.css-dev-only-do-not-override-yp8pcc).ant-table-wrapper
+	.ant-table.ant-table-small
+	.ant-table-tbody
+	> tr
+	> th,
+:where(.css-dev-only-do-not-override-yp8pcc).ant-table-wrapper
+	.ant-table.ant-table-small
+	.ant-table-tbody
+	> tr
+	> td,
+:where(.css-dev-only-do-not-override-yp8pcc).ant-table-wrapper
+	.ant-table.ant-table-small
+	tfoot
+	> tr
+	> th,
+:where(.css-dev-only-do-not-override-yp8pcc).ant-table-wrapper
+	.ant-table.ant-table-small
+	tfoot
+	> tr
+	> td {
 	padding: 2px 0;
 }
 
 @media only screen and (max-width: 800px) {
-
-	.tableOneTwo:where(.css-dev-only-do-not-override-yp8pcc).ant-table-wrapper .ant-table-thead>tr>th,
-	:where(.css-dev-only-do-not-override-yp8pcc).ant-table-wrapper .ant-table-tbody>tr>th,
-	:where(.css-dev-only-do-not-override-yp8pcc).ant-table-wrapper .ant-table-tbody>tr>td,
-	:where(.css-dev-only-do-not-override-yp8pcc).ant-table-wrapper tfoot>tr>th,
-	:where(.css-dev-only-do-not-override-yp8pcc).ant-table-wrapper tfoot>tr>td {
+	.tableOneTwo:where(.css-dev-only-do-not-override-yp8pcc).ant-table-wrapper
+		.ant-table-thead
+		> tr
+		> th,
+	:where(.css-dev-only-do-not-override-yp8pcc).ant-table-wrapper
+		.ant-table-tbody
+		> tr
+		> th,
+	:where(.css-dev-only-do-not-override-yp8pcc).ant-table-wrapper
+		.ant-table-tbody
+		> tr
+		> td,
+	:where(.css-dev-only-do-not-override-yp8pcc).ant-table-wrapper
+		tfoot
+		> tr
+		> th,
+	:where(.css-dev-only-do-not-override-yp8pcc).ant-table-wrapper
+		tfoot
+		> tr
+		> td {
 		padding: 0 0;
 	}
 }
@@ -5573,7 +5617,8 @@ table {
 
 	.rdtMonths {
 		table {
-			&:nth-child(2) {}
+			&:nth-child(2) {
+			}
 		}
 	}
 }
@@ -5581,36 +5626,42 @@ table {
 .hexagon-1 {
 	background: rgba(86, 6, 166, 0.5);
 	font-weight: bold;
-	-webkit-clip-path: polygon(25% 5%,
-			75% 5%,
-			100% 50%,
-			75% 95%,
-			25% 95%,
-			0% 50%);
+	-webkit-clip-path: polygon(
+		25% 5%,
+		75% 5%,
+		100% 50%,
+		75% 95%,
+		25% 95%,
+		0% 50%
+	);
 	clip-path: polygon(25% 5%, 75% 5%, 100% 50%, 75% 95%, 25% 95%, 0% 50%);
 }
 
 .hexagon-2 {
 	background: #dd4431;
 	font-weight: bold;
-	-webkit-clip-path: polygon(25% 5%,
-			75% 5%,
-			100% 50%,
-			75% 95%,
-			25% 95%,
-			0% 50%);
+	-webkit-clip-path: polygon(
+		25% 5%,
+		75% 5%,
+		100% 50%,
+		75% 95%,
+		25% 95%,
+		0% 50%
+	);
 	clip-path: polygon(25% 5%, 75% 5%, 100% 50%, 75% 95%, 25% 95%, 0% 50%);
 }
 
 .hexagon-3 {
 	font-weight: bold;
 	background: #668a1a;
-	-webkit-clip-path: polygon(25% 5%,
-			75% 5%,
-			100% 50%,
-			75% 95%,
-			25% 95%,
-			0% 50%);
+	-webkit-clip-path: polygon(
+		25% 5%,
+		75% 5%,
+		100% 50%,
+		75% 95%,
+		25% 95%,
+		0% 50%
+	);
 	clip-path: polygon(25% 5%, 75% 5%, 100% 50%, 75% 95%, 25% 95%, 0% 50%);
 }
 

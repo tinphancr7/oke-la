@@ -107,7 +107,7 @@ function PromotionPage() {
 									</span>
 									s
 									<p className="text-sm">
-										Áp dụng cho toàn bộ thành viên của Okchoi có tài khoản chơi
+										Áp dụng cho toàn bộ thành viên của banhgio có tài khoản chơi
 										tại nhà cái NEW88
 									</p>
 								</div>
@@ -129,15 +129,15 @@ function PromotionPage() {
 										Thể lệ chương trình:
 									</span>
 									<p className="text-sm leading-5">
-										Mỗi thành viên tham gia sẽ đăng nhập vào trang chủ Okchoi và
-										thực hiện các nhiệm vụ dưới đây:
+										Mỗi thành viên tham gia sẽ đăng nhập vào trang chủ banhgio
+										và thực hiện các nhiệm vụ dưới đây:
 									</p>
 									<ul className="list-disc text-sm ml-4 ">
 										<li>
 											Hoàn thành ít nhất 1 lần cho kèo bằng tính năng “Cho Tips”
 										</li>
 										<li>
-											Thời gian xem trực tiếp trận đấu trên Okchoi đạt 45 phút
+											Thời gian xem trực tiếp trận đấu trên banhgio đạt 45 phút
 										</li>
 									</ul>
 									<div className="flex  gap-1 my-4">
@@ -154,7 +154,7 @@ function PromotionPage() {
 								</div>
 								<p className="text-sm italic">
 									Chương trình chỉ áp dụng cho thành viên đăng ký nhà cái NEW88
-									thông qua Okchoi. Bạn có thể đăng ký bằng cách{" "}
+									thông qua banhgio . Bạn có thể đăng ký bằng cách{" "}
 									<Link
 										target="_blank"
 										href="https://bk16.short.gy/JYDO8N/"
@@ -197,7 +197,7 @@ function PromotionPage() {
 									</span>
 
 									<p className="text-sm">
-										Áp dụng cho toàn bộ thành viên của Okchoi có tài khoản chơi
+										Áp dụng cho toàn bộ thành viên của banhgio có tài khoản chơi
 										tại nhà cái NEW88
 									</p>
 								</div>
@@ -256,8 +256,8 @@ function PromotionPage() {
 										Thể lệ chương trình:
 									</span>
 									<p className="text-sm leading-7">
-										Mỗi thành viên tham gia sẽ đăng nhập vào trang chủ Okchoi và
-										chọn khuyến mãi hỗ trợ hoàn tiền:
+										Mỗi thành viên tham gia sẽ đăng nhập vào trang chủ banhgio
+										và chọn khuyến mãi hỗ trợ hoàn tiền:
 									</p>
 									<ul className="list-disc text-sm ml-4 ">
 										<li className="">
@@ -299,7 +299,7 @@ function PromotionPage() {
 								</div>
 								<p className="text-sm italic">
 									Chương trình chỉ áp dụng cho thành viên đăng ký nhà cái NEW88
-									thông qua Okchoi. Bạn có thể đăng ký bằng cách{" "}
+									thông qua banhgio . Bạn có thể đăng ký bằng cách{" "}
 									<Link
 										target="_blank"
 										href="https://bk16.short.gy/JYDO8N/"
@@ -336,7 +336,7 @@ function PromotionPage() {
 									</span>
 
 									<p className="text-sm">
-										Áp dụng cho toàn bộ thành viên của Okchoi có tài khoản chơi
+										Áp dụng cho toàn bộ thành viên của banhgio có tài khoản chơi
 										tại nhà cái NEW88
 									</p>
 								</div>
@@ -401,8 +401,8 @@ function PromotionPage() {
 										Thể lệ chương trình:
 									</span>
 									<p className="text-sm leading-7">
-										Mỗi thành viên tham gia sẽ đăng nhập vào trang chủ Okchoi và
-										chọn khuyến mãi ưu đãi nạp lại:
+										Mỗi thành viên tham gia sẽ đăng nhập vào trang chủ banhgio
+										và chọn khuyến mãi ưu đãi nạp lại:
 									</p>
 									<ul className="list-disc text-sm ml-4 ">
 										<li className="">
@@ -441,7 +441,7 @@ function PromotionPage() {
 								</div>
 								<p className="text-sm italic">
 									Chương trình chỉ áp dụng cho thành viên đăng ký nhà cái NEW88
-									thông qua Okchoi. Bạn có thể đăng ký bằng cách{" "}
+									thông qua banhgio . Bạn có thể đăng ký bằng cách{" "}
 									<Link
 										target="_blank"
 										href="https://bk16.short.gy/JYDO8N/"
@@ -495,7 +495,7 @@ function PromotionPage() {
 				/>
 
 				<h1 className="mt-10 font-bold text-3xl text-center">
-					Nhận thưởng cùng okchoi
+					Nhận thưởng cùng banhgio
 				</h1>
 
 				<div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-y-4 gap-x-6">

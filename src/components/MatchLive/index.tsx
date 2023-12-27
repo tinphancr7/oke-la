@@ -123,11 +123,12 @@ const MatchLive = ({match, matchId, room, messages}: any) => {
 	const [linkLive, setLinkLive] = useState<string>("");
 
 	const {data} = useQuery({
-		queryKey: ["events"],
+		queryKey: ["events", matchId],
 		queryFn: () => getEvent(matchId.toString()),
 		enabled: !!matchId,
 	});
 	const event = data?.data?.[0]?.events;
+	console.log("event", event);
 	const liveStreamMutation = useMutation({
 		mutationFn: (matchId: string) =>
 			axios.post(`https://api.553328.com/api/match-detail?matchId=${matchId}`),
@@ -162,7 +163,6 @@ const MatchLive = ({match, matchId, room, messages}: any) => {
 	};
 	return (
 		<>
-			{" "}
 			<div
 				className={`match-live-layout grid lg:grid-cols-4 w-full mb-4 gap-4`}
 			>
@@ -170,7 +170,7 @@ const MatchLive = ({match, matchId, room, messages}: any) => {
 				<div
 					className={`match-live-video-wrapper ${
 						hiddenChat ? "lg:col-span-4" : "lg:col-span-3"
-					} h-[300px] sm:h-[500px] md:h-[600px] lg:h-[700px]`}
+					} h-[300px] sm:h-[500px] md:h-[600px] lg:h-fit`}
 				>
 					{isLiveStreamErr ? (
 						<iframe
@@ -217,7 +217,7 @@ const MatchLive = ({match, matchId, room, messages}: any) => {
 							Ẩn chat
 						</div>
 					</div>
-					<div className="message-list px-4 py-2 h-[400px] overflow-auto flex flex-col-reverse">
+					<div className="message-list px-4 py-2 h-[420px] overflow-auto flex flex-col-reverse">
 						{messages?.map((item) => (
 							<ChatHomeItem key={item?._id} message={item} />
 						))}

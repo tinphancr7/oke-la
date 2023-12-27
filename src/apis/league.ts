@@ -15,3 +15,5 @@ export const getLeagueHaveMatch = (date: string, type: string) =>
 	axiosInstanceISport.get(`getLeagueHaveMatch?date=${date}&type=${type}`);
 
 export const getOtherLeagues = () => axiosInstanceISport.get(`other-leagues`);
+export const getTopScoreByLeague = (leagueId: string, season: string) =>
+	axiosInstanceISport.get(`/topScorers?leagueId=${leagueId}&season=${season}`);

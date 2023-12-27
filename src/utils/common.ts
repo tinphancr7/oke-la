@@ -28,4 +28,21 @@ const getLastElement = (str: string) => {
 const formattedPrice = (price: number) => {
 	return price.toFixed(0).replace(/\d(?=(\d{3})+$)/g, "$&.");
 };
-export {formatDate, findTourName, getLastElement, formattedPrice};
+const sortTopScore = (data: any) => {
+	data?.sort((a: any, b: any) => b.goalsCount - a.goalsCount);
+	let currentRank = 1;
+	let currentGoalsCount = data[0]?.goalsCount;
+	const newData = data?.map((player: any) => {
+		if (player.goalsCount < currentGoalsCount) {
+			currentRank++;
+			currentGoalsCount = player.goalsCount;
+		}
+
+		return {
+			top: currentRank,
+			...player,
+		};
+	});
+	return newData;
+};
+export {formatDate, findTourName, getLastElement, formattedPrice, sortTopScore};

@@ -2,9 +2,9 @@ import axios from "axios";
 import {axiosInstanceISport} from ".";
 
 const scheduleApi = {
-	getSchedulesById: (id: string, date: string) => {
+	getSchedulesById: (id: string, round: string) => {
 		return axiosInstanceISport.get(
-			`/getScheduleAndResultByLeagueId?leagueId=${id}&date=${date}`
+			`/getScheduleAndResultByLeagueId?leagueId=${id}&round=${round}`
 		);
 	},
 

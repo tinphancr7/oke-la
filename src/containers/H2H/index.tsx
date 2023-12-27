@@ -9,7 +9,7 @@ import Image from "next/image";
 
 const H2H = ({matchId, match}: any) => {
 	const {data} = useQuery({
-		queryKey: ["h2h"],
+		queryKey: ["h2h", matchId],
 		queryFn: () => getMatchAnalysisGroupLeague(matchId.toString()),
 		enabled: !!matchId,
 	});

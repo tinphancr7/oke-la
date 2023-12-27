@@ -1,18 +1,77 @@
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, {useMemo, useState} from "react";
 
-import {LOGO_DEFAULT} from "@/constant";
-import slugify from "slugify";
-import {getOtherLeagues} from "@/apis/league";
+import {LOGO_DEFAULT, topLeague} from "@/constant";
+
+import {getLeagueAndSubLeage, getOtherLeagues} from "@/apis/league";
 import {useQuery} from "@tanstack/react-query";
+import TreeMenu from "react-simple-tree-menu";
+import ItemComponent from "@/components/treeMenu/ItemComponent";
 
 function LeagueOtherHome() {
 	const {data} = useQuery({
-		queryKey: ["leagues"],
-		queryFn: () => getOtherLeagues(),
+		queryKey: ["leagues1"],
+		queryFn: () =>
+			getLeagueAndSubLeage(topLeague.map((item) => item.country).toString()),
 	});
+
 	const leagues = data?.data;
+	console.log("leagues", leagues);
+
+	const treeData = useMemo(() => {
+		return (
+			leagues &&
+			Object?.keys(leagues)?.map((league: any) => {
+				return {
+					key: league,
+					label: league,
+					bolder: true,
+					logo: topLeague.find((item) => item.country == league)?.countryLogo,
+					leagueId: topLeague.find((item) => item.country == league)?.leagueId,
+					nodes: leagues[league]?.map((item: any) => {
+						return {
+							key: item?.name,
+							label: item?.name,
+							logo: item?.logo,
+							leagueId: item?.leagueId,
+							nodes: [
+								{
+									key: "schedule",
+									label: "Lịch thi đấu",
+									leagueId: item?.leagueId,
+									isSub: true,
+									menuKey: "schedule",
+								},
+								{
+									key: "rank",
+									label: "Bảng xếp hạng",
+									leagueId: item?.leagueId,
+									isSub: true,
+									menuKey: "rank",
+								},
+								{
+									key: "list-goal",
+									label: "Danh sách ghi bàn",
+									leagueId: item?.leagueId,
+									isSub: true,
+									menuKey: "list-goal",
+								},
+								{
+									key: "statistic",
+									label: "Thống kê",
+									leagueId: item?.leagueId,
+									isSub: true,
+									menuKey: "statistic",
+								},
+							],
+						};
+					}),
+				};
+			})
+		);
+	}, [leagues]);
+	console.log("treeData", treeData);
 
 	return (
 		<div className="hidden lg:block mt-4">
@@ -20,27 +79,26 @@ function LeagueOtherHome() {
 				CÁC GIẢI ĐẤU KHÁC
 			</div>
 
-			<div className="bg-white px-4 rounded-b-[8px]">
-				{leagues?.map((item: any) => (
-					<div key={item?.id} className="py-2 border-b last:border-none">
-						<Link
-							href={`/xem-giai-dau/${slugify(item?.name).toLowerCase()}-${
-								item?.leagueId
-							}`}
-						>
-							<div className="flex items-center gap-x-4">
-								<Image
-									src={`${item?.logo}` || LOGO_DEFAULT}
-									width={22}
-									height={22}
-									alt=""
-								/>
-
-								<div className="text-md leading-normal">{item?.name}</div>
-							</div>
-						</Link>
-					</div>
-				))}
+			<div id="tree-menu" className="tree-menu">
+				<TreeMenu hasSearch={false} data={treeData}>
+					{({search, items}) => (
+						<ul>
+							{items.map((props) => (
+								<>
+									<ItemComponent
+										{...props}
+										level={props.level}
+										// setLeague={(e: any) => {
+										// 	setLeague(e);
+										// 	setRound(1);
+										// }}
+										// setTab={setMenuTabs}
+									/>
+								</>
+							))}
+						</ul>
+					)}
+				</TreeMenu>
 			</div>
 		</div>
 	);
