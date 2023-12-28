@@ -45,7 +45,7 @@ const tabs = [
 	},
 	{
 		id: 5,
-		name: "Đội bóng",
+		name: "CLB",
 		nameEn: "team",
 	},
 ];
@@ -187,9 +187,7 @@ const Tournament = () => {
 							</div>
 
 							<div>
-								<Heading className="">
-									Trận cầu vòng {leagueProfile?.currentRound}
-								</Heading>
+								<Heading className="">Trận cầu vòng {round}</Heading>
 								<div>
 									{schedulesData?.length === 0 ? (
 										<div className="flex items-center justify-center text-red-500 font-semibold text-base uppercase">
@@ -429,7 +427,7 @@ const Tournament = () => {
 					<div
 						key={index}
 						onClick={() => setTab(item.id)}
-						className={` text-base whitespace-nowrap  pb-1  cursor-pointer transition ${
+						className={` text-base capitalize whitespace-nowrap  pb-1  cursor-pointer transition ${
 							tab === index + 1
 								? "text-secondary  border-b-2 border-secondary font-bold"
 								: "text-[#BBBBBB]"

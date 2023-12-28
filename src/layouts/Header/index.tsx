@@ -75,7 +75,7 @@ function Header() {
 	const pathname = usePathname();
 
 	return (
-		<header className="fixed top-0 left-0 right-0 z-50 bg-gray-200 md:bg-white">
+		<header className="fixed top-0 left-0 right-0 z-[999999] bg-gray-200 md:bg-white">
 			<div
 				className=" hidden md:flex "
 				style={{
