@@ -3,7 +3,7 @@ import React from "react";
 const Footer = () => {
 	return (
 		// Ngay đây có z-50 nè ai muốn thêm thì thêm nha
-		<div className="w-full h-full relative footer  px-4 md:py-8 pt-8 lg:p-0">
+		<div className="w-full h-full relative footer   px-4 md:py-8 pt-8 lg:p-0">
 			<div className="w-full h-full">
 				<div className="xl:container mx-auto pt-2">
 					<div className=" flex flex-col justify-center w-full ">
@@ -49,7 +49,7 @@ const Footer = () => {
 					<div className="bg-black/50 w-full h-[1px] md:my-6 my-10"></div>
 					<div className="flex justify-between md:items-center md:flex-row flex-col-reverse pb-4 h-full">
 						<p className="text-xs font-normal text-neutral-400 mt-8 md:mt-0 flex align-bottom h-full">
-							Copyright @ 2023 Okchoi | 18+ Gamble responsibly
+							© All rights reserved. seolatop.com
 						</p>
 						<div className="flex gap-4 items-center">
 							<span className="text-xs font-normal text-black">

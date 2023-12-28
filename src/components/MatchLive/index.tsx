@@ -128,7 +128,7 @@ const MatchLive = ({match, matchId, room, messages}: any) => {
 		enabled: !!matchId,
 	});
 	const event = data?.data?.[0]?.events;
-	console.log("event", event);
+
 	const liveStreamMutation = useMutation({
 		mutationFn: (matchId: string) =>
 			axios.post(`https://api.553328.com/api/match-detail?matchId=${matchId}`),

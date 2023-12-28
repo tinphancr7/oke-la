@@ -1,5 +1,3 @@
-import Image from "next/image";
-import Link from "next/link";
 import React, {useMemo, useState} from "react";
 
 import {LOGO_DEFAULT, topLeague} from "@/constant";
@@ -11,13 +9,12 @@ import ItemComponent from "@/components/treeMenu/ItemComponent";
 
 function LeagueOtherHome() {
 	const {data} = useQuery({
-		queryKey: ["leagues1"],
+		queryKey: ["other-leagues"],
 		queryFn: () =>
 			getLeagueAndSubLeage(topLeague.map((item) => item.country).toString()),
 	});
 
 	const leagues = data?.data;
-	console.log("leagues", leagues);
 
 	const treeData = useMemo(() => {
 		return (
@@ -37,32 +34,39 @@ function LeagueOtherHome() {
 							leagueId: item?.leagueId,
 							nodes: [
 								{
+									key: "overview",
+									label: "Tổng quan",
+									leagueId: item?.leagueId,
+									isSub: true,
+									menuKey: 1,
+								},
+								{
 									key: "schedule",
 									label: "Lịch thi đấu",
 									leagueId: item?.leagueId,
 									isSub: true,
-									menuKey: "schedule",
+									menuKey: 2,
 								},
 								{
 									key: "rank",
 									label: "Bảng xếp hạng",
 									leagueId: item?.leagueId,
 									isSub: true,
-									menuKey: "rank",
+									menuKey: 3,
 								},
 								{
 									key: "list-goal",
 									label: "Danh sách ghi bàn",
 									leagueId: item?.leagueId,
 									isSub: true,
-									menuKey: "list-goal",
+									menuKey: 4,
 								},
 								{
-									key: "statistic",
-									label: "Thống kê",
+									key: "club",
+									label: "Câu lạc bộ",
 									leagueId: item?.leagueId,
 									isSub: true,
-									menuKey: "statistic",
+									menuKey: 5,
 								},
 							],
 						};
@@ -71,7 +75,6 @@ function LeagueOtherHome() {
 			})
 		);
 	}, [leagues]);
-	console.log("treeData", treeData);
 
 	return (
 		<div className="hidden lg:block mt-4">
@@ -83,19 +86,13 @@ function LeagueOtherHome() {
 				<TreeMenu hasSearch={false} data={treeData}>
 					{({search, items}) => (
 						<ul>
-							{items.map((props) => (
-								<>
-									<ItemComponent
-										{...props}
-										level={props.level}
-										// setLeague={(e: any) => {
-										// 	setLeague(e);
-										// 	setRound(1);
-										// }}
-										// setTab={setMenuTabs}
-									/>
-								</>
-							))}
+							{items.map((props) => {
+								return (
+									<>
+										<ItemComponent {...props} level={props.level} />
+									</>
+								);
+							})}
 						</ul>
 					)}
 				</TreeMenu>

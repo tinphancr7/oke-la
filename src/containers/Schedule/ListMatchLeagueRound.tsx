@@ -39,7 +39,6 @@ const MatchHomeItem = ({
 	match: IMatchWithOdds;
 	matchThesport: any[];
 }) => {
-	const {user, updateAuthUser} = useContext(AuthContext);
 	const [showOdd1, setShowOdd1] = useState(false);
 	const [showOdd2, setShowOdd2] = useState(false);
 	const [modalDetail, setModalDetail] = useState(false);
@@ -53,15 +52,6 @@ const MatchHomeItem = ({
 		<>
 			<div className="bg-white px-4 py-2 w-full hidden lg:flex items-center justify-between border-t">
 				<div className="flex items-center gap-x-4" style={{width: "400px"}}>
-					{/* {user?.matchs?.includes(match?.matchId) ? (
-          <ButtonOnlyIcon onClick={() => handleUnLikeMatch(match?.matchId)}>
-            <AiFillStar color={"#ffad01"} size={24} />
-          </ButtonOnlyIcon>
-        ) : (
-          <ButtonOnlyIcon onClick={() => handleLikeMatch(match?.matchId)}>
-            <IconStar color="#C2C2C2" />
-          </ButtonOnlyIcon>
-        )} */}
 					<div className="text-xs w-[40px]">
 						<div>
 							{" "}
@@ -83,7 +73,7 @@ const MatchHomeItem = ({
 							<div className="flex items-center justify-between">
 								<div className="w-full flex-1 flex gap-x-2 items-center">
 									<div className="bg-light p-1.5 rounded-full">
-										<img
+										<Image
 											width={22}
 											height={22}
 											src={match?.homeIcon || "/images/no-image-logo-team.png"}
@@ -93,14 +83,14 @@ const MatchHomeItem = ({
 									<div className="font-semibold text-sm">{match?.homeName}</div>
 								</div>
 								<div className="bg-secondary w-6 h-6 text-sm flex items-center justify-center text-white">
-									{match?.homeScore}
+									{match?.status === 0 ? "-" : match?.homeScore}
 								</div>
 							</div>
 							{/* away team */}
 							<div className="flex items-center justify-between mt-2">
 								<div className="w-full flex-1 flex gap-x-2 items-center">
 									<div className="bg-light p-1.5 rounded-full">
-										<img
+										<Image
 											width={22}
 											height={22}
 											src={match?.awayIcon || "/images/no-image-logo-team.png"}
@@ -114,7 +104,7 @@ const MatchHomeItem = ({
 									</Link>
 								</div>
 								<div className="bg-secondary w-6 h-6 text-sm flex items-center justify-center text-white">
-									{match?.awayScore}
+									{match?.status === 0 ? "-" : match?.awayScore}
 								</div>
 							</div>
 						</Link>

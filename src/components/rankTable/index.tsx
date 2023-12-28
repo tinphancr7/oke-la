@@ -112,24 +112,10 @@ const RankTable = ({
 		<div>
 			<div className="w-full">
 				{leagueType == "1" ? (
-					<div className="mt-4">
-						<ul className="flex items-center gap-4 mb-4">
-							{[
-								{value: "all", title: "TOÀN THỂ"},
-								{value: "home", title: "SÂN NHÀ"},
-								{value: "away", title: "SÂN KHÁCH"},
-							]?.map((item) => (
-								<li
-									key={item?.value}
-									className={`${
-										item?.value === statusRank ? "text-white bg-secondary" : ""
-									} font-bold text-sm px-4 py-1 rounded-[8px] cursor-pointer`}
-									onClick={() => setStatusRank(item?.value)}
-								>
-									{item?.title}
-								</li>
-							))}
-						</ul>
+					<div className=" bg-gray-100 rounded-xl p-4">
+						<h3 className="text-lg font-bold text-black pb-4 capitalize">
+							Bảng xếp hạng hiện tại
+						</h3>
 						<div className="max-w-full overflow-x-auto">
 							<div className="bg-secondary rounded-t-lg p-4 min-w-fit lg:min-w-full">
 								<div className="flex items-center justify-between lg:justify-start w-full  text-xs lg:text-sm font-normal text-white">
@@ -140,15 +126,15 @@ const RankTable = ({
 										Câu lạc bộ
 									</div>
 									<div className="w-[100px] lg:w-[30%] flex items-center justify-center gap-4 lg:gap-10">
-										<div className="w-[20%] lg:w-[10%]">P</div>
-										<div className="w-[20%] lg:w-[10%]">W</div>
-										<div className="w-[20%] lg:w-[10%]">D</div>
-										<div className="w-[20%] lg:w-[10%]">L</div>
+										<div className="w-[15%] lg:w-[10%]">P</div>
+										<div className="w-[15%] lg:w-[10%]">W</div>
+										<div className="w-[15%] lg:w-[10%]">D</div>
+										<div className="w-[15%] lg:w-[10%]">L</div>
 									</div>
-									<div className="w-[50px] lg:w-[10%] flex items-center ">
+									<div className="w-[50px] hidden lg:w-[10%] lg:flex items-center ">
 										Hiệu số
 									</div>
-									<div className="w-[200px] lg:w-[20%] flex items-center justify-center  ">
+									<div className="w-[200px] hidden lg:w-[20%] lg:flex items-center justify-center  ">
 										<span className="inline-block pb-1 relative">
 											Phong độ gần nhất
 										</span>
@@ -167,7 +153,7 @@ const RankTable = ({
 									Hiện tại không có bảng xếp hạng
 								</div>
 							) : (
-								<div className="min-w-fit border">
+								<div className="min-w-fit ">
 									{rankData?.map((item: any, index: number) => {
 										return (
 											<div
@@ -202,23 +188,23 @@ const RankTable = ({
 															</span>
 														</div>
 														<div className="w-[100px] lg:w-[30%] flex items-center justify-center gap-4 lg:gap-10 text-black11 text-xs">
-															<div className="w-[20%] lg:w-[10%]">
+															<div className="w-[15%] lg:w-[10%]">
 																{item?.totalCount}
 															</div>
-															<div className="w-[20%] lg:w-[10%]">
+															<div className="w-[15%] lg:w-[10%]">
 																{item?.winCount}
 															</div>
-															<div className="w-[20%] lg:w-[10%]">
+															<div className="w-[15%] lg:w-[10%]">
 																{item?.drawCount}
 															</div>
-															<div className="w-[20%] lg:w-[10%]">
+															<div className="w-[15%] lg:w-[10%]">
 																{item?.loseCount}
 															</div>
 														</div>
-														<div className="w-[50px] lg:w-[10%] text-black11 text-xs gap-1">
+														<div className="w-[50px] hidden lg:flex lg:w-[10%] text-black11 text-xs gap-1">
 															<span>{item?.goalDifference}</span>
 														</div>
-														<div className="w-[200px] lg:w-[20%] flex items-center justify-center gap-2">
+														<div className="w-[200px] hidden lg:w-[20%] lg:flex items-center justify-center gap-2">
 															<span
 																key={index}
 																className={`w-5 h-5  text-white flex items-center justify-center rounded-full ${genClassNamePreviousResult(
@@ -341,14 +327,6 @@ const RankTable = ({
 																</span>
 															</div>
 															<div className="w-[30%] flex items-center gap-2">
-																{/* <div className="w-5 h-5 lg:w-6 lg:h-6 relative flex-shrink-0">
-                              <Image
-                                src={findTeam(item?.teamId)?.logo}
-                                fill
-                                className="w-full h-full object-fill"
-                                alt=""
-                              />
-                            </div> */}
 																<span className="text-xs lg:text-sm font-semibold text-black11">
 																	{item?.teamName}
 																</span>

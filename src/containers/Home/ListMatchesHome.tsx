@@ -393,7 +393,7 @@ function ListMatchesHome({searchMatch}: {searchMatch: string}) {
 							style={{boxShadow: `-1px 0px 2px 0px rgba(0, 0, 0, 0.25)`}}
 						>
 							<Datetime
-								className="w-[90px] lg:w-[150px] root-match-date-picker"
+								className="w-[90px] text-xs lg:text-sm lg:w-[160px] root-match-date-picker "
 								value={date}
 								locale="vi"
 								dateFormat="DD/MM ddd"

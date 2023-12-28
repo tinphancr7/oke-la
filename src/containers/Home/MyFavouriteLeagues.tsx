@@ -19,9 +19,9 @@ function MyFavouriteLeagues() {
 				{favouriteLeagues?.map((item) => (
 					<div key={item?.leagueId} className="py-2 border-b last:border-none">
 						<Link
-							href={`/xem-giai-dau/${slugify(item?.name).toLowerCase()}-${
-								item?.leagueId
-							}`}
+							href={`/xem-giai-dau/${slugify(
+								item?.name
+							).toLowerCase()}?leagueId=${item?.leagueId}&tab=${1}`}
 						>
 							<div className="flex items-center gap-x-4">
 								<Image src={`${item?.logo}`} width={22} height={22} alt="" />

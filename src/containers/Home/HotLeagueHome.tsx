@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import premierleague from "@/assets/images/premier-league.svg";
 import {schedules} from "@/constant";
 import slugify from "slugify";
 
@@ -16,9 +15,9 @@ function HotLeagueHome() {
 				{schedules?.map((item) => (
 					<div key={item?.id} className="py-2 border-b last:border-none">
 						<Link
-							href={`/xem-giai-dau/${slugify(item?.name).toLowerCase()}-${
-								item?.id
-							}`}
+							href={`/xem-giai-dau/${slugify(
+								item?.name
+							).toLowerCase()}?leagueId=${item?.id}&tab=${1}`}
 						>
 							<div className="flex items-center gap-x-4">
 								<Image

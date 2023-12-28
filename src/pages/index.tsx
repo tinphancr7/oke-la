@@ -3,6 +3,7 @@ import UserRankTableV2 from "@/components/UserRankTableV2";
 import ChatRankHome from "@/containers/Home/ChatRankHome";
 import GetPromotion from "@/containers/Home/GetPromotion";
 import HotLeagueHome from "@/containers/Home/HotLeagueHome";
+import HotLeagueHomeMobile from "@/containers/Home/HotLeagueHomeMobile";
 import LeagueOtherHome from "@/containers/Home/LeagueOtherHome";
 import ListMatchesHome from "@/containers/Home/ListMatchesHome";
 import MyFavouriteLeagues from "@/containers/Home/MyFavouriteLeagues";
@@ -34,7 +35,7 @@ function HomePage() {
 					<div className="grid grid-cols-12 gap-x-5">
 						<div className="col-span-12 lg:col-span-3 bg-danger order-last lg:order-first">
 							<div className="sticky top-24">
-								<div className="bg-white rounded-full flex text-sm gap-2 items-center p-2 mb-4">
+								<div className="bg-white rounded-full hidden lg:flex text-sm gap-2 items-center p-2 mb-4">
 									<IoIosSearch size={20} />
 									<input
 										type="text"
@@ -50,9 +51,9 @@ function HomePage() {
 							</div>
 						</div>
 						<div className="col-span-12 lg:col-span-6">
-							{/* <GetPromotion isMobile />
+							<GetPromotion isMobile />
 
-							<HotLeagueHomeMobile /> */}
+							<HotLeagueHomeMobile />
 
 							<ListMatchesHome searchMatch={searchMatch} />
 						</div>

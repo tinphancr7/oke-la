@@ -26,9 +26,6 @@ function ListMatchesHomeMobile({
 	item,
 	handleLikeLeague,
 	handleUnLikeLeague,
-	handleLikeMatch,
-	handleUnLikeMatch,
-	handleNavigate,
 	isGroup = true,
 }: Props) {
 	const {user} = useContext(AuthContext);
@@ -96,21 +93,21 @@ function ListMatchesHomeMobile({
 								</div>
 
 								<div>
-									<div className="text-xs flex items-center justify-center text-[#FF3849] font-semibold">
+									<div className="text-xs flex items-center justify-center text-black font-semibold">
 										{match?.status === 0 ? "-" : match?.homeScore}
 									</div>
-									<div className="text-xs flex items-center justify-center text-[#FF3849] mt-3 font-semibold">
+									<div className="text-xs flex items-center justify-center text-black mt-3 font-semibold">
 										{match?.status === 0 ? "-" : match?.awayScore}
 									</div>
 								</div>
 
 								<div>
-									<div className="text-[#9DA5AC] text-xs">
+									<div className="text-black text-xs">
 										HT {match?.homeHalfScore}-{match?.awayHalfScore}
 									</div>
-									<div className="text-[#9DA5AC] text-xs flex items-center mt-3 gap-1">
+									<div className="text-black text-xs flex items-center mt-3 gap-1">
 										<IconCornerKick />
-										{match?.homeHalfScore}-{match?.awayHalfScore}
+										{match?.homeCorner}-{match?.awayCorner}
 									</div>
 								</div>
 							</div>
