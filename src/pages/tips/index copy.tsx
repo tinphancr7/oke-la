@@ -1,7 +1,7 @@
 import Breadcrumb from "@/components/Breadcrumb";
 import RankHomeItem from "@/containers/Home/RankHomeItem";
 import TipHomeItem from "@/containers/Home/TipHomeItem";
-import React, {Fragment, useContext, useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {getPaggingGroup, getPagingTips, joinGroup} from "@/apis/tip";
 import {IGroup, ITip, IUser} from "@/interfaces";
 import Link from "next/link";
@@ -18,10 +18,6 @@ import Head from "next/head";
 import parse from "html-react-parser";
 import {getRankTable} from "@/apis/user";
 import Image from "next/image";
-import NewestTipItem from "@/containers/Member/NewestTipItem";
-import NewestTipItem1 from "@/containers/Member/NewestTipItem1";
-import Pagination from "@/components/pagination/Pagination";
-import {keepPreviousData, useQuery} from "@tanstack/react-query";
 
 type Props = {
 	tips: ITip[];
@@ -57,9 +53,8 @@ const rankTabs = [
 		title: "Nhóm",
 	},
 ];
-const Tips = ({hotMatches, tags, rank}: Props) => {
+const Tips = ({tips, hotMatches, tags, rank}: Props) => {
 	const {user} = useContext(AuthContext);
-	const [pageIndex, setPageIndex] = useState(1);
 
 	const router = useRouter();
 
@@ -84,14 +79,7 @@ const Tips = ({hotMatches, tags, rank}: Props) => {
 			console.log(error);
 		}
 	};
-	const {data} = useQuery({
-		queryKey: ["tips", pageIndex],
-		queryFn: () => getPagingTips(pageIndex, 10),
-		placeholderData: keepPreviousData,
-	});
 
-	const tips = data?.data?.result?.result || [];
-	const totalPage = data?.data?.result?.totalPage;
 	useEffect(() => {
 		getGroup();
 	}, []);
@@ -183,15 +171,10 @@ const Tips = ({hotMatches, tags, rank}: Props) => {
 					</div>
 				</div>
 				<div className="grid md:grid-cols-4 gap-x-5 mt-4 md:px-0 px-4">
-					<div className="col-span-4 md:col-span-3 h-fit  px-4 py-4">
-						{tips?.map((tip, index) => (
-							<Fragment key={index}>
-								<NewestTipItem1 item={tip} />
-							</Fragment>
+					<div className="col-span-4 md:col-span-3 h-fit bg-neutral-100 px-4 py-4">
+						{tips?.map((tip) => (
+							<TipHomeItem key={tip._id} tip={tip} />
 						))}
-						<div className="w-full pb-4 lg:block hidden">
-							<Pagination totalPage={totalPage} setPageIndex={setPageIndex} />
-						</div>
 					</div>
 					<div className="col-span-4 md:col-span-1 md:pt-0 pt-4 w-full">
 						<div className="bg-neutral-100 px-4 py-4">
@@ -552,13 +535,15 @@ export default Tips;
 
 export async function getServerSideProps() {
 	try {
-		const [hotMatches, seo, rank] = await Promise.all([
+		const [tipsRes, hotMatches, seo, rank] = await Promise.all([
+			getPagingTips(1, 20),
 			getHotMatches(1, 5),
 			getSeoByLink("/tips"),
 			getRankTable(),
 		]);
 		return {
 			props: {
+				tips: tipsRes.data?.result.result,
 				hotMatches: hotMatches.data?.result,
 				tags: seo?.data?.result?.tags || [],
 				rank: rank?.data?.result?.data,

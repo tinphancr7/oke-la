@@ -1,18 +1,14 @@
 import ReactPaginate from "react-paginate";
 
 const Pagination = ({
-	setRound,
-
-	totalRound,
-	round,
+	totalPage,
+	setPageIndex,
 }: {
-	setRound: any;
-
-	totalRound: number;
-	round: number;
+	totalPage: number;
+	setPageIndex: any;
 }) => {
 	const handlePageClick = (event: any) => {
-		setRound(event.selected + 1);
+		setPageIndex(event.selected + 1);
 	};
 	return (
 		<ReactPaginate
@@ -20,11 +16,11 @@ const Pagination = ({
 			nextLabel=">"
 			onPageChange={handlePageClick}
 			pageRangeDisplayed={4}
-			pageCount={totalRound}
+			pageCount={totalPage}
 			previousLabel="<"
 			renderOnZeroPageCount={null}
 			className="pagination"
-			initialPage={round}
+			// initialPage={1}
 		/>
 	);
 };

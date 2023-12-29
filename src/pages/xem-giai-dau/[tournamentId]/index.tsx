@@ -40,7 +40,7 @@ const tabs = [
 	},
 	{
 		id: 4,
-		name: "Danh sách ghi bàn",
+		name: "vua phá lưới",
 		nameEn: "list-goal",
 	},
 	{

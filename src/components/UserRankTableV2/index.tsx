@@ -1,4 +1,7 @@
-import {useRef, useState} from "react";
+import {getMatchById} from "@/apis/match";
+import {getPagingTips} from "@/apis/tip";
+import {useQuery} from "@tanstack/react-query";
+import {useEffect, useMemo, useRef, useState} from "react";
 import {BsQuestionCircleFill} from "react-icons/bs";
 import {FaInfoCircle, FaUser} from "react-icons/fa";
 
@@ -21,6 +24,131 @@ const UserRankTableV2 = () => {
 			}
 		}
 	};
+
+	const {data} = useQuery({
+		queryKey: ["tips"],
+		queryFn: () => getPagingTips(1, 100),
+	});
+
+	const generateData = async () => {
+		const obj: any = {};
+
+		if (data?.data?.result?.result) {
+			for (const item of data.data.result.result) {
+				const matchData = await getMatchById(item?.matchId, "1");
+				const match = matchData?.data?.match?.[0];
+
+				if (match?.status !== -1) continue;
+
+				if (!obj[item?.user?._id]) {
+					obj[item?.user?._id] = {
+						userId: item?.user?._id,
+						username: item?.user?.username,
+						totalWin: 0,
+						totalLose: 0,
+					};
+				}
+
+				if (item?.odd?.choosen === "initialOver") {
+					if (
+						(match?.homeScore || 0) + Number(match?.awayScore || 0) >=
+						Number(item?.odd?.initialHandicap)
+					) {
+						obj[item?.user?._id].totalWin += 1;
+					} else {
+						obj[item?.user?._id].totalLose += 1;
+					}
+				} else if (item?.odd?.choosen === "initialUnder") {
+					if (
+						(match?.homeScore || 0) + Number(match?.awayScore || 0) <
+						Number(item?.odd?.initialHandicap)
+					) {
+						obj[item?.user?._id].totalWin += 1;
+					} else {
+						obj[item?.user?._id].totalLose += 1;
+					}
+				} else if (item?.odd?.choosen === "initialHome") {
+					if (
+						(match?.homeScore || 0) + Number(item?.odd?.initialHandicap) * -1 >
+						(match?.awayScore || 0)
+					) {
+						obj[item?.user?._id].totalWin += 1;
+					} else {
+						obj[item?.user?._id].totalLose += 1;
+					}
+				} else {
+					if (
+						(match?.awayScore || 0) + Number(item?.odd?.initialHandicap) >
+						(match?.awayScore || 0)
+					) {
+						obj[item?.user?._id].totalWin += 1;
+					} else {
+						obj[item?.user?._id].totalLose += 1;
+					}
+				}
+			}
+		}
+
+		return obj;
+	};
+
+	useEffect(() => {
+		const getData = async () => {
+			try {
+				const data = await generateData();
+				// Convert object to array of [key, value] pairs
+				let dataArray = Object.entries(data);
+
+				// Sort the array based on the win percentage in descending order
+				dataArray.sort((a, b) => {
+					const percentA =
+						a[1].totalWin / (a[1].totalWin + a[1].totalLose) || 0;
+
+					const percentB =
+						b[1].totalWin / (b[1].totalWin + b[1].totalLose) || 0;
+
+					return percentB - percentA;
+				});
+				console.log("dataArray", dataArray);
+
+				// Convert the sorted array back to an object
+				const sortedData = Object.fromEntries(dataArray);
+				console.log("sortedData", sortedData);
+
+				// Now you can use the result as needed
+			} catch (error) {
+				console.error("Error generating data:", error);
+			}
+		};
+		console.log("data", getData());
+	}, [data]);
+	// const genWinLose = () => {
+	// 	if (item?.odd?.choosen === "initialOver")
+	// 		return (match?.homeScore || 0) + Number(match?.awayScore || 0) >=
+	// 			Number(item?.odd?.initialHandicap)
+	// 			? "Thắng"
+	// 			: "Thua";
+
+	// 	if (item?.odd?.choosen === "initialUnder")
+	// 		return (match?.homeScore || 0) + Number(match?.awayScore || 0) <
+	// 			Number(item?.odd?.initialHandicap)
+	// 			? "Thắng"
+	// 			: "Thua";
+
+	// 	if (item?.odd?.choosen === "initialHome")
+	// 		return (match?.homeScore || 0) + Number(item?.odd?.initialHandicap) * -1 >
+	// 			(match?.awayScore || 0)
+	// 			? "Thắng"
+	// 			: "Thua";
+
+	// 	if (item?.odd?.choosen === "initialAway")
+	// 		return (match?.awayScore || 0) + Number(item?.odd?.initialHandicap) >
+	// 			(match?.awayScore || 0)
+	// 			? "Thắng"
+	// 			: "Thua";
+
+	// 	return null;
+	// };
 
 	const handleChangeOptionDate = (
 		optionDate: "date" | "week" | "month" | "year"
@@ -219,3 +347,18 @@ const UserRankTableV2 = () => {
 };
 
 export default UserRankTableV2;
+
+// {
+// 	user1:{
+// 		win:5,
+// 		lose:2
+// 	},
+// 	user2:{
+// 		win:4,
+// 		lose:2
+// 	},
+// 	user3:{
+// 		win:2,
+// 		lose:2
+// 	}
+// }

@@ -23,12 +23,12 @@ import {IoEyeOffOutline} from "react-icons/io5";
 const Login = ({handleClick, onClose}: {handleClick: any; onClose?: any}) => {
 	const {authUser}: any = useContext(AuthContext);
 	const [username, setUsername] = useState<string>();
-	const [email, setEmail] = useState<string>();
+
 	const [password, setPassword] = useState<string>();
 	const [error, setError] = useState<string>();
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 	const onSubmit = async () => {
-		const res = await authUser(username, email, password);
+		const res = await authUser(username, password);
 		if (!res?.success) {
 			setError(res?.message);
 		}
@@ -66,21 +66,7 @@ const Login = ({handleClick, onClose}: {handleClick: any; onClose?: any}) => {
 						/>
 					</div>
 				</div>
-				<div className="pb-9">
-					<p className="text-sm text-black font-semibold">Email</p>
-					<div className="relative">
-						<div className="absolute top-3 left-2">
-							<MdOutlineMailOutline size={24} className="text-[#FEAD00]" />
-						</div>
-						<input
-							type="email"
-							required
-							onChange={(e) => handleChangeText(e, setEmail)}
-							className="h-12 pl-10 pr-20 z-0 focus:outline-none align-middle rounded-xl bg-gray-100 text-xs w-full focus-visible:ring-offset-2"
-							placeholder="Nhập tên tài khoản"
-						/>
-					</div>
-				</div>
+
 				<div className="pb-9">
 					<p className="text-sm text-black font-semibold">Mật khẩu</p>
 

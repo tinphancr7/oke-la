@@ -9,7 +9,7 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 const Commentary = ({matchId, match}: any) => {
 	const {data} = useQuery({
-		queryKey: ["commentary"],
+		queryKey: ["commentary", matchId],
 		queryFn: () => getMatchAnalysisAll(matchId.toString()),
 		enabled: !!matchId,
 	});

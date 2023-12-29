@@ -46,16 +46,11 @@ const AuthProvider = ({children}: Props) => {
 		}
 	};
 
-	const authUser = async (
-		username: string,
-		email: string,
-		password: string
-	) => {
+	const authUser = async (username: string, password: string) => {
 		try {
 			setError(false);
 			const dataLogin = {
 				username,
-				email,
 				password,
 			};
 			const res = await login(dataLogin);

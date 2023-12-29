@@ -2,6 +2,7 @@ import {getMatchById} from "@/apis/match";
 import {LOGO_DEFAULT} from "@/constant";
 import {IMatch, ITip} from "@/interfaces";
 import moment from "moment";
+import Image from "next/image";
 import Link from "next/link";
 import React, {useEffect, useState} from "react";
 import {AiOutlineHeart} from "react-icons/ai";
@@ -12,8 +13,7 @@ type Props = {
 	item: ITip;
 };
 
-function NewestTipItem({item}: Props) {
-	const [isLoading, setIsLoading] = useState(true);
+function NewestTipItem1({item}: Props) {
 	const [match, setMatch] = useState<IMatch>();
 	const {ref, inView} = useInView({
 		triggerOnce: true,
@@ -49,7 +49,6 @@ function NewestTipItem({item}: Props) {
 				match?.awayName + ` + ${Math.abs(Number(item?.odd?.initialHandicap))}`
 			);
 	};
-	console.log("genOdd", genOdd());
 
 	const genWinLose = () => {
 		if (item?.odd?.choosen === "initialOver")
@@ -116,7 +115,20 @@ function NewestTipItem({item}: Props) {
 	};
 
 	return (
-		<div ref={ref} className="border-b p-1 px-4 mb-4 tips-item relative">
+		<div ref={ref} className="border-b rounded-lg p-4 mb-5 tips-item relative">
+			<div className="flex items-center gap-2">
+				<div className="w-10 h-10 relative flex-shrink-0">
+					<Image src={LOGO_DEFAULT} fill className="object-cover" alt="" />
+				</div>
+				<div>
+					<div className="text-sm font-semibold text-[#2C3882]">
+						{item?.user?.username}
+					</div>
+					<div className="text-xs text-[#888]">
+						{moment(item?.createdAt).format("DD/MM/YYYY HH:mm")}
+					</div>
+				</div>
+			</div>
 			<div className="bg-[url('/tips-tag.svg')] text-white text-center bg-no-repeat bg-center bg-cover absolute w-[300px] top-0 left-[50%] translate-x-[-50%] truncate">
 				{match?.leagueName}
 			</div>
@@ -143,29 +155,32 @@ function NewestTipItem({item}: Props) {
 				)}
 			</div>
 
-			<div className="flex justify-center gap-4 mt-4 px-4">
-				<div className="flex items-center flex-1">
-					<div className="font-bold text-lg flex-1 text-end">
-						{match?.homeName || "---"}
-					</div>
-					<div className="flex-1 flex justify-end">
-						<img
-							src={match?.homeIcon || LOGO_DEFAULT}
-							alt={match?.homeName}
-							className="mt-2 w-[64px]"
-						/>
+			<div className="flex justify-center items-center w-full gap-4 mt-4 px-4">
+				<div className=" w-[45%] ">
+					<div className="flex items-center justify-end gap-2">
+						<div className="font-bold text-lg  ">
+							{match?.homeName || "---"}
+						</div>
+						<div className=" relative w-14 h-14 ">
+							<Image
+								src={match?.homeIcon || LOGO_DEFAULT}
+								alt={"logo"}
+								className="object-cover"
+								fill
+							/>
+						</div>
 					</div>
 				</div>
 
-				<div className="text-sm text-[#888] font-semibold ">
+				<div className="text-sm text-[#888] w-[10%] flex items-center justify-center flex-col font-semibold ">
 					<img src="/icons/versus-icon.png" />
 
 					{match?.status === -1 ? (
-						<div className="text-center bg-secondary text-white rounded-lg mt-2">
+						<div className="text-center px-4 py-1 bg-secondary text-white rounded-lg mt-2">
 							{match?.homeScore} - {match?.awayScore}
 						</div>
 					) : (
-						<div className="text-center bg-secondary text-white rounded-lg mt-2">
+						<div className="text-center  px-4 py-1 bg-secondary text-white rounded-lg mt-2">
 							{moment(Number(match?.matchTime) * 1000).format("HH:mm")}
 						</div>
 					)}
@@ -175,16 +190,19 @@ function NewestTipItem({item}: Props) {
 					</div>
 				</div>
 
-				<div className="flex items-center flex-1">
-					<div className="flex-1 ">
-						<img
-							src={match?.awayIcon || LOGO_DEFAULT}
-							alt={match?.awayName}
-							className="mt-2 w-[64px]"
-						/>
-					</div>
-					<div className="font-bold flex-1 text-md text-start text-lg">
-						{match?.awayName || "---"}
+				<div className=" w-[45%]">
+					<div className="flex items-center gap-2 ">
+						<div className="w-14 h-14 relative ">
+							<Image
+								src={match?.awayIcon || LOGO_DEFAULT}
+								alt="logo"
+								className="object-cover"
+								fill
+							/>
+						</div>
+						<div className="font-bold flex-1 text-md text-start text-lg">
+							{match?.awayName || "---"}
+						</div>
 					</div>
 				</div>
 			</div>
@@ -227,4 +245,4 @@ function NewestTipItem({item}: Props) {
 	);
 }
 
-export default NewestTipItem;
+export default NewestTipItem1;
