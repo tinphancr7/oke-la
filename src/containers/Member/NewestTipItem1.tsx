@@ -30,7 +30,7 @@ function NewestTipItem1({item}: Props) {
 
 	useEffect(() => {
 		if (inView) getMatch();
-	}, [inView]);
+	}, [inView, item?.matchId]);
 
 	const genOdd = () => {
 		if (item?.odd?.choosen === "initialOver")

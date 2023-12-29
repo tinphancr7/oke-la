@@ -84,6 +84,7 @@ const Tips = ({hotMatches, tags, rank}: Props) => {
 			console.log(error);
 		}
 	};
+
 	const {data} = useQuery({
 		queryKey: ["tips", pageIndex],
 		queryFn: () => getPagingTips(pageIndex, 10),
