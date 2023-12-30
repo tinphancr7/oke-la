@@ -11,15 +11,14 @@ function GetPromotion({isMobile = false}: Props) {
 	return (
 		<div className={`mb-3 ${isMobile ? "block lg:hidden" : "hidden lg:block"}`}>
 			<div className="relative">
-				<div>
+				<div className="w-full h-[220px] relative">
 					<Image
-						width={100}
-						height={100}
-						src={"/images/bg-football.jpg"}
+						src={"/images/BANHGIO-HPNY.gif"}
 						alt="Nhận khuyến mãi"
-						className="w-full h-auto"
+						fill
+						className="object-cover"
 					/>
-					<div className="absolute top-[50%] right-5 -translate-y-[50%] ">
+					{/* <div className="absolute top-[50%] right-5 -translate-y-[50%] ">
 						<div className="w-20 h-20 relative">
 							<Image
 								src="/images/logo-banhgio.webp"
@@ -28,7 +27,7 @@ function GetPromotion({isMobile = false}: Props) {
 								className="object-contain"
 							/>
 						</div>
-					</div>
+					</div> */}
 				</div>
 
 				<Link href={"/khuyen-mai"}>

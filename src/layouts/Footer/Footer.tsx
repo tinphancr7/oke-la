@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 const Footer = () => {
 	return (
@@ -33,16 +34,33 @@ const Footer = () => {
 						<div className="md:col-span-1"></div>
 						<div className="md:col-span-2 w-full flex items-center md:justify-end flex-wrap mt-8 md:gap-2">
 							<div>
-								<span>Liên hệ chúng tôi</span>
+								<Link className="hover:text-blue-500" href="/lien-he-chung-toi">
+									Liên hệ chúng tôi
+								</Link>
 								<span className="px-4">|</span>
-								<span>Hợp tác kinh doanh</span>
+								<Link
+									className="hover:text-blue-500"
+									href="/hop-tac-kinh-doanh"
+								>
+									Hợp tác kinh doanh
+								</Link>
 							</div>
 
 							<span className="hidden md:block px-4 md:px-2">|</span>
 							<div className="md:mt-0 mt-4">
-								<span>Điều khoản và dịch vụ</span>
+								<Link
+									className="hover:text-blue-500"
+									href="/dieu-khoan-dich-vu"
+								>
+									Điều khoản và dịch vụ
+								</Link>
 								<span className="px-4">|</span>
-								<span>Chính sách quyền riêng tư</span>
+								<Link
+									className="hover:text-blue-500"
+									href="/chinh-sach-quyen-rieng-tu"
+								>
+									Chính sách quyền riêng tư
+								</Link>
 							</div>
 						</div>
 					</div>
