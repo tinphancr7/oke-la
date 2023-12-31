@@ -183,14 +183,16 @@ const Tips = ({hotMatches, tags, rank}: Props) => {
 						</button>
 					</div>
 				</div>
-				<div className="grid md:grid-cols-4 gap-x-5 mt-4 md:px-0 px-4">
+				<div className="grid md:grid-cols-4 gap-x-5 mt-4 px-0 md:px-4">
 					<div className="col-span-4 md:col-span-3 h-fit  px-4 py-4">
-						{tips?.map((tip, index) => (
-							<Fragment key={index}>
-								<NewestTipItem1 item={tip} />
-							</Fragment>
-						))}
-						<div className="w-full pb-4 lg:block hidden">
+						<div className="grid grid-cols-12 gap-x-5">
+							{tips?.map((tip, index) => (
+								<div className="col-span-12 md:col-span-6 " key={index}>
+									<NewestTipItem1 item={tip} />
+								</div>
+							))}
+						</div>
+						<div className="w-full pb-4 ">
 							<Pagination totalPage={totalPage} setPageIndex={setPageIndex} />
 						</div>
 					</div>

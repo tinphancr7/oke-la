@@ -115,8 +115,11 @@ function NewestTipItem1({item}: Props) {
 	};
 
 	return (
-		<div ref={ref} className="border-b rounded-lg p-4 mb-5 tips-item relative">
-			<div className="flex items-center gap-2">
+		<div
+			ref={ref}
+			className="border-b h-[400px] flex flex-col justify-between  rounded-lg p-4 mb-5 tips-item relative"
+		>
+			<div className="flex items-center gap-2 pt-4">
 				<div className="w-10 h-10 relative flex-shrink-0">
 					<Image src={LOGO_DEFAULT} fill className="object-cover" alt="" />
 				</div>
@@ -129,7 +132,7 @@ function NewestTipItem1({item}: Props) {
 					</div>
 				</div>
 			</div>
-			<div className="bg-[url('/tips-tag.svg')] text-white text-center bg-no-repeat bg-center bg-cover absolute w-[300px] top-0 left-[50%] translate-x-[-50%] truncate">
+			<div className="bg-[url('/tips-tag.svg')] text-white text-center bg-no-repeat bg-center bg-cover text-sm py-1  absolute w-[300px] top-0 left-[50%] translate-x-[-50%] truncate">
 				{match?.leagueName}
 			</div>
 			<div className="flex items-center justify-end gap-x-2 t text-sm mt-2">
@@ -156,12 +159,12 @@ function NewestTipItem1({item}: Props) {
 			</div>
 
 			<div className="flex justify-center items-center w-full gap-4 mt-4 px-4">
-				<div className=" w-[45%] ">
+				<div className=" w-[40%] ">
 					<div className="flex items-center justify-end gap-2">
-						<div className="font-bold text-lg  ">
+						<div className="font-bold text-sm  ">
 							{match?.homeName || "---"}
 						</div>
-						<div className=" relative w-14 h-14 ">
+						<div className=" relative w-8 h-8 ">
 							<Image
 								src={match?.homeIcon || LOGO_DEFAULT}
 								alt={"logo"}
@@ -172,7 +175,7 @@ function NewestTipItem1({item}: Props) {
 					</div>
 				</div>
 
-				<div className="text-sm text-[#888] w-[10%] flex items-center justify-center flex-col font-semibold ">
+				<div className="text-sm text-[#888] w-[20%] flex items-center justify-center flex-col font-semibold ">
 					<img src="/icons/versus-icon.png" />
 
 					{match?.status === -1 ? (
@@ -190,9 +193,9 @@ function NewestTipItem1({item}: Props) {
 					</div>
 				</div>
 
-				<div className=" w-[45%]">
+				<div className=" w-[40%]">
 					<div className="flex items-center gap-2 ">
-						<div className="w-14 h-14 relative ">
+						<div className="w-8 h-8 relative ">
 							<Image
 								src={match?.awayIcon || LOGO_DEFAULT}
 								alt="logo"
@@ -200,25 +203,28 @@ function NewestTipItem1({item}: Props) {
 								fill
 							/>
 						</div>
-						<div className="font-bold flex-1 text-md text-start text-lg">
+						<div className="font-bold flex-1  text-start text-sm">
 							{match?.awayName || "---"}
 						</div>
 					</div>
 				</div>
 			</div>
 			<div className="mt-8 flex gap-1 text-[14px]">
-				<p className="font-bold">Nhận định: </p>
-				<div
+				<p className="font-bold whitespace-nowrap">Nhận định: </p>
+				<p
 					className="truncate"
 					dangerouslySetInnerHTML={{__html: `${item.content}`}}
-				></div>
+				></p>
 				<p>
-					<Link href={`/tips/${item.slug}`} className="text-[#2C3882]">
+					<Link
+						href={`/tips/${item.slug}`}
+						className="text-[#2C3882] whitespace-nowrap pl-2"
+					>
 						[Xem tiếp]
 					</Link>
 				</p>
 			</div>
-			<div></div>
+
 			<div className="flex mt-4 items-center justify-between">
 				<div>
 					<div className="flex items-center gap-x-2 mt-2">

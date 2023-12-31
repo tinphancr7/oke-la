@@ -22,6 +22,7 @@ import {useQuery} from "@tanstack/react-query";
 import TopScore from "@/components/topScore/TopScore";
 import TableTeam from "@/components/table/TableTeam";
 import LeagueOtherHome from "@/containers/Home/LeagueOtherHome";
+import slugify from "slugify";
 
 const tabs = [
 	{
@@ -418,7 +419,12 @@ const Tournament = () => {
 					backLink="/"
 					breadCrumb={[
 						{title: "Trang chủ", url: "/"},
-						{title: leagueProfile?.name, url: `/lich-thi-dau/${leagueId}`},
+						{
+							title: leagueProfile?.name,
+							url: `/xem-giai-dau/${slugify(
+								leagueProfile?.name || ""
+							).toLowerCase()}?leagueId=${leagueId}&tab=${1}`,
+						},
 					]}
 				/>
 			</div>
@@ -480,7 +486,8 @@ const Tournament = () => {
 											className="bg-primary text-white font-normal px-[10px] py-1"
 											icon={RiArrowDownSFill}
 										>
-											{leagueProfile?.currentSeason}
+											{leagueProfile?.currentSeason.split("-")[0]}{" "}
+											{leagueProfile?.currentSeason.split("-")[1]}
 										</Button>
 									</div>
 									<div className="flex items-center justify-between pb-2">

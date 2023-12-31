@@ -1,8 +1,16 @@
+import moment from "moment";
 import Head from "next/head";
 import Image from "next/image";
 import React from "react";
 
 const Contact = () => {
+	const startDate = moment().utcOffset("+07:00").startOf("date").unix();
+	const endDate = moment().endOf("day").utcOffset("+07:00").unix();
+	const currentTime = moment().utcOffset("+07:00").unix();
+	console.log(
+		"endData",
+		moment.unix(currentTime).format("DD/MM/YYYY HH:mm:ss")
+	);
 	return (
 		<>
 			<Head>
