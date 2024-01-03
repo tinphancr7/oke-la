@@ -17,6 +17,7 @@ import slugify from "slugify";
 import {useQueryClient} from "@tanstack/react-query";
 import {getEvent, getMatchById} from "@/apis/match";
 import StatsApi from "@/apis/statistic.api";
+import {IoIosArrowDown, IoIosArrowUp} from "react-icons/io";
 
 interface IMatchWithOdds extends IMatch {
 	handicap: string;
@@ -90,7 +91,7 @@ const MatchHomeItem = ({
 
 	return (
 		<div
-			className="bg-white px-4 py-2 w-full flex items-center justify-between border-t"
+			className="bg-white   px-4 py-2 w-full flex items-center justify-between border-t"
 			onMouseMove={() => prefetchingData(match?.matchId)}
 		>
 			<div
@@ -220,6 +221,8 @@ function ListMatchHomeItem({
 	matchThesport,
 	isGroup = true,
 }: Props) {
+	const [showMore, setShowMore] = useState(true);
+
 	const {user, updateAuthUser} = useContext(AuthContext);
 	const handleLikeLeague = async (leagueId: string) => {
 		try {
@@ -280,7 +283,7 @@ function ListMatchHomeItem({
 					<Link
 						href={`/xem-giai-dau/${slugify(
 							matchGroupLeague?.leagueName
-						).toLowerCase()}-${matchGroupLeague?._id}`}
+						).toLowerCase()}?leagueId=${matchGroupLeague?._id}&tab=${1}`}
 					>
 						<span className="text-sm" style={{fontWeight: 200}}>
 							{(matchGroupLeague as any)?.profile?.country}:{" "}
@@ -292,21 +295,32 @@ function ListMatchHomeItem({
 								: null}
 						</span>
 					</Link>
+					<span
+						className="inline-block pl-2 cursor-pointer"
+						onClick={() => setShowMore(!showMore)}
+					>
+						{showMore ? (
+							<IoIosArrowDown size={20} />
+						) : (
+							<IoIosArrowUp size={20} />
+						)}
+					</span>
 				</div>
 				<div style={{width: "100px"}} className="text-right">
 					Live
 				</div>
 			</div>
 
-			{(isGroup ? matchGroupLeague?.listMatches : [matchGroupLeague])?.map(
-				(item) => (
-					<MatchHomeItem
-						matchThesport={matchThesport}
-						match={item}
-						key={item?._id}
-					/>
-				)
-			)}
+			{showMore &&
+				(isGroup ? matchGroupLeague?.listMatches : [matchGroupLeague])?.map(
+					(item) => (
+						<MatchHomeItem
+							matchThesport={matchThesport}
+							match={item}
+							key={item?._id}
+						/>
+					)
+				)}
 		</div>
 	);
 }

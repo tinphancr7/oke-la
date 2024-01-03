@@ -2,7 +2,12 @@ import Breadcrumb from "@/components/Breadcrumb";
 import RankHomeItem from "@/containers/Home/RankHomeItem";
 import TipHomeItem from "@/containers/Home/TipHomeItem";
 import React, {Fragment, useContext, useEffect, useState} from "react";
-import {getPaggingGroup, getPagingTips, joinGroup} from "@/apis/tip";
+import {
+	getPaggingGroup,
+	getPagingTips,
+	getTipsFollowByUSer,
+	joinGroup,
+} from "@/apis/tip";
 import {IGroup, ITip, IUser} from "@/interfaces";
 import Link from "next/link";
 import {getHotMatches} from "@/apis/match";
@@ -21,7 +26,13 @@ import Image from "next/image";
 import NewestTipItem from "@/containers/Member/NewestTipItem";
 import NewestTipItem1 from "@/containers/Member/NewestTipItem1";
 import Pagination from "@/components/pagination/Pagination";
-import {keepPreviousData, useQuery} from "@tanstack/react-query";
+import {
+	keepPreviousData,
+	useInfiniteQuery,
+	useQuery,
+} from "@tanstack/react-query";
+import Auth from "@/layouts/Auth";
+import Login from "@/layouts/Auth/Login";
 
 type Props = {
 	tips: ITip[];
@@ -34,12 +45,9 @@ const tabs = [
 		id: 1,
 		title: "HOT",
 	},
+
 	{
 		id: 2,
-		title: "Trận đấu",
-	},
-	{
-		id: 3,
 		title: "Theo dõi",
 	},
 ];
@@ -58,7 +66,8 @@ const rankTabs = [
 	},
 ];
 const Tips = ({hotMatches, tags, rank}: Props) => {
-	const {user} = useContext(AuthContext);
+	const {user, setIsOpen, isOpen, isLogin, setIsLogin} =
+		useContext(AuthContext);
 	const [pageIndex, setPageIndex] = useState(1);
 
 	const router = useRouter();
@@ -85,14 +94,28 @@ const Tips = ({hotMatches, tags, rank}: Props) => {
 		}
 	};
 
-	const {data} = useQuery({
-		queryKey: ["tips", pageIndex],
+	const {data: tipsData} = useQuery({
+		queryKey: ["tips", pageIndex, tab],
 		queryFn: () => getPagingTips(pageIndex, 10),
 		placeholderData: keepPreviousData,
+		enabled: tab === 1,
 	});
 
-	const tips = data?.data?.result?.result || [];
-	const totalPage = data?.data?.result?.totalPage;
+	const hopTips = tipsData?.data?.result?.result || [];
+
+	const {data: followTipsData} = useQuery({
+		queryKey: ["follow-tips", pageIndex, tab],
+		queryFn: () => getTipsFollowByUSer(pageIndex, 10),
+		enabled: tab === 2,
+	});
+	const followTips = followTipsData?.data?.result?.result || [];
+
+	const tips = tab === 1 ? hopTips : followTips;
+
+	const totalPage =
+		tab === 1
+			? tipsData?.data?.result?.totalPage
+			: followTipsData?.data?.result?.totalPage;
 	useEffect(() => {
 		getGroup();
 	}, []);
@@ -100,7 +123,13 @@ const Tips = ({hotMatches, tags, rank}: Props) => {
 	const handleJoinGroup = async (groupId: string) => {
 		try {
 			if (!user) {
-				toast.error("Bạn cần đăng nhập để thực hiện tính năng này");
+				handleClose();
+				setTimeout(() => {
+					setIsLogin(true);
+					setIsOpen(true);
+				}, 500);
+
+				// toast.error("Bạn cần đăng nhập để thực hiện tính năng này");
 			} else {
 				const res = await joinGroup(groupId);
 				if (res.data.status === 1) {
@@ -185,23 +214,34 @@ const Tips = ({hotMatches, tags, rank}: Props) => {
 				</div>
 				<div className="grid md:grid-cols-4 gap-x-5 mt-4 px-0 md:px-4">
 					<div className="col-span-4 md:col-span-3 h-fit  px-4 py-4">
-						<div className="grid grid-cols-12 gap-x-5">
-							{tips?.map((tip, index) => (
-								<div className="col-span-12 md:col-span-6 " key={index}>
-									<NewestTipItem1 item={tip} />
+						{tips.length > 0 ? (
+							<>
+								<div className="grid grid-cols-12 gap-x-5">
+									{tips?.map((tip: any, index: number) => (
+										<div className="col-span-12 md:col-span-6 " key={index}>
+											<NewestTipItem1 item={tip} />
+										</div>
+									))}
 								</div>
-							))}
-						</div>
-						<div className="w-full pb-4 ">
-							<Pagination totalPage={totalPage} setPageIndex={setPageIndex} />
-						</div>
+								<div className="w-full pb-4 ">
+									<Pagination
+										totalPage={totalPage}
+										setPageIndex={setPageIndex}
+									/>
+								</div>
+							</>
+						) : (
+							<p className="text-center text-black text-sm font-semibold">
+								Hiện tại chưa có tip nào
+							</p>
+						)}
 					</div>
 					<div className="col-span-4 md:col-span-1 md:pt-0 pt-4 w-full">
 						<div className="bg-neutral-100 px-4 py-4">
 							<div className="flex justify-between">
 								<h5 className="text-black text-lg font-bold">Trận Đấu Hot</h5>
 								<Link
-									href={"#"}
+									href="/truc-tiep"
 									className="text-center text-yellow-700 text-sm font-semibold"
 								>
 									Xem thêm
@@ -218,7 +258,10 @@ const Tips = ({hotMatches, tags, rank}: Props) => {
 												{match?.leagueName}
 											</p>
 										</div>
-										<div className="grid grid-cols-3 mt-2">
+										<Link
+											href={`truc-tiep/${match?._id}`}
+											className="grid grid-cols-3 mt-2"
+										>
 											<div className="flex justify-center items-center flex-col">
 												<ImageWithFallback
 													src={match?.homeIcon}
@@ -231,12 +274,12 @@ const Tips = ({hotMatches, tags, rank}: Props) => {
 											<div className="flex justify-center items-center flex-col">
 												<div className="px-4 py-1 flex  justify-start items-center gap-2.5">
 													<p className="text-black text-xs font-semibold">
-														{moment(match?.matchTime).format("HH:mm A")}
+														{moment.unix(match?.matchTime).format("HH:mm A")}
 													</p>
 												</div>
 												<div className="px-4 py-1 bg-amber-500 flex rounded justify-start items-center gap-2.5">
 													<p className="text-white text-xs font-semibold">
-														1 Tips
+														{moment.unix(match?.matchTime).format("DD/MM/YYYY")}
 													</p>
 												</div>
 											</div>
@@ -249,7 +292,7 @@ const Tips = ({hotMatches, tags, rank}: Props) => {
 													{match?.awayName}
 												</p>
 											</div>
-										</div>
+										</Link>
 									</div>
 								))}
 							</div>
@@ -421,21 +464,21 @@ const Tips = ({hotMatches, tags, rank}: Props) => {
 									<div className="p-6">
 										<div className=" pb-5 border-b-2 flex flex-col items-center gap-5">
 											<h5 className="text-black text-base font-bold">
-												Nội quy Cộng đồng Ok Chơi
+												Nội quy Cộng đồng BanhGio
 											</h5>
 										</div>
 										<div>
 											<h5 className="text-amber-500 text-base font-bold text-center my-2">
-												Chào mừng đến với cộng đồng Ok Chơi !
+												Chào mừng đến với cộng đồng BanhGio !
 											</h5>
 											<p>
-												1. Đăng ký thành viên Ok Chơi có thể tham gia tương tác
+												1. Đăng ký thành viên BanhGio có thể tham gia tương tác
 												của cộng đồng;
 											</p>
 											<p>
 												2. Thành viên đăng ít nhất 14 bài /tuần và có tỷ lệ
 												thắng trên 60% sẽ có cơ hội cơ hội lớn để trở thành
-												chuyên gia Ok Chơi;
+												chuyên gia BanhGio;
 											</p>
 											<p>
 												3. Chuyên gia có thể đăng bài kim cương để kiếm tiền,
@@ -521,14 +564,14 @@ const Tips = ({hotMatches, tags, rank}: Props) => {
 											</p>
 											<p>&nbsp;</p>
 											<p>
-												10. Admin Ok Chơi có quyền giải thích cuối cùng của nội
+												10. Admin BanhGio có quyền giải thích cuối cùng của nội
 												quy cộng đồng. Email liên hệ:
 												<a
-													href="mailto:okchoi@gmail.com"
+													href="mailto:banhgio@gmail.com"
 													className="text-amber-500"
 												>
 													{" "}
-													okchoi@gmail.com
+													banhgio@gmail.com
 												</a>
 											</p>
 										</div>
@@ -547,6 +590,7 @@ const Tips = ({hotMatches, tags, rank}: Props) => {
 					</div>
 				</Dialog>
 			</Transition>
+			{/* {!user?._id && <Auth />} */}
 		</>
 	);
 };

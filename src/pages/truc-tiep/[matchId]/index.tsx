@@ -1,5 +1,6 @@
 import {getMatchById} from "@/apis/match";
 import {getRoomByMatchId} from "@/apis/room";
+import scheduleApi from "@/apis/schedule.api";
 import {getVoteByMatchId, unVote, vote as voteMatch} from "@/apis/vote";
 import Breadcrumb from "@/components/Breadcrumb";
 import Commentary from "@/components/DetailMatch/Commentary";
@@ -22,6 +23,34 @@ import {useRouter} from "next/router";
 import {useContext, useEffect, useState} from "react";
 import "react-dropdown/style.css";
 import {toast} from "react-toastify";
+const handicapKeys = [
+	"matchId",
+	"companyId",
+	"initialHandicap",
+	"initialHome",
+	"initialAway",
+	"instantHandicap",
+	"instantHome",
+	"instantAway",
+	"maintenance",
+	"inPlay",
+	"changeTime",
+	"close",
+	"OddsType",
+];
+const overUnderKeys = [
+	"matchId",
+	"companyId",
+	"initialHandicap",
+	"initialOver",
+	"initialUnder",
+	"instantHandicap",
+	"instantOver",
+	"instantUnder",
+	"changeTime",
+	"close",
+	"OddsType",
+];
 
 export type matchType =
 	| "main"
@@ -67,6 +96,7 @@ const MatchDetail = () => {
 	const socket: any = useContext(SocketContext);
 	const [messages, setMessages] = useState<IMessage[]>([]);
 	const [tab, setTab] = useState<matchType>("main");
+	const [preOdd, setPreOdd] = useState<any>(null);
 
 	//vote
 
@@ -144,6 +174,48 @@ const MatchDetail = () => {
 	useEffect(() => {
 		setMessages(room?.messages);
 	}, [room, matchId]);
+
+	useEffect(() => {
+		const getDetail = async (matchId: any) => {
+			try {
+				const res = await scheduleApi.getPrematchAndInplayOddByMatchId(matchId);
+				console.log(res);
+
+				const data = res.data;
+				if (data === null) return;
+				const newHandicap: {
+					[key: string]: any;
+				} = {};
+				const newOverUnder: {
+					[key: string]: any;
+				} = {};
+				handicapKeys.forEach(
+					(item, index) =>
+						(newHandicap[item] = data.handicap[0]?.split(",")[index])
+				);
+				overUnderKeys.forEach(
+					(item, index) =>
+						(newOverUnder[item] = data.overUnder[0]?.split(",")[index])
+				);
+				const finalData = {
+					// ...match,
+					handicap: newHandicap,
+					overUnder: newOverUnder,
+				};
+				console.log(
+					"🚀 ~ file: [matchId].tsx ~ line 293 ~ getDetail ~ finalData",
+					finalData
+				);
+
+				setPreOdd(finalData);
+			} catch (error) {
+				console.log(error);
+			}
+		};
+		if (matchId) {
+			getDetail(matchId);
+		}
+	}, [matchId]);
 
 	const renderTab = (tab: matchType) => {
 		switch (tab) {
@@ -474,6 +546,36 @@ const MatchDetail = () => {
 					</div>
 				</div>
 				{/* // */}
+
+				{preOdd && (
+					<div className="mx-auto w-[1000px]">
+						<button className="w-full mb-4  text-white p-2 rounded-full text-center  bg-light-red uppercase">
+							new88
+						</button>
+						<div className="flex items-center  text-center text-white ">
+							<div className="bg-[#255261] flex-1 py-2 rounded-l-lg">AH</div>
+							<div className="bg-[#10323D] flex-1 py-2">
+								{preOdd?.handicap?.initialHome}
+							</div>
+							<div className="bg-[#10323D] flex-1 py-2">
+								{preOdd?.handicap?.initialHandicap}
+							</div>
+							<div className="bg-[#10323D] flex-1 py-2">
+								{preOdd?.handicap?.initialAway}
+							</div>
+							<div className="bg-[#255261] flex-1 py-2">O/U</div>
+							<div className="bg-[#10323D] flex-1 py-2">
+								{preOdd?.overUnder?.initialOver}
+							</div>
+							<div className="bg-[#10323D] flex-1 py-2">
+								{preOdd?.overUnder?.initialHandicap}
+							</div>
+							<div className="bg-[#10323D] flex-1 py-2 rounded-r-lg">
+								{preOdd?.overUnder?.initialUnder}
+							</div>
+						</div>
+					</div>
+				)}
 				<div className="match-detail-layout w-full">
 					<ul className="flex items-end justify-center gap-2 transition-all">
 						{tabLives.map((tabLive, index) => (

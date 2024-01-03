@@ -47,7 +47,7 @@ const ListAllMatchHome = ({
 		(acc, page) => [...acc, ...page?.result],
 		[]
 	);
-
+	console.log("listMatches", listMatches);
 	return (
 		<div>
 			<div className="mt-4">

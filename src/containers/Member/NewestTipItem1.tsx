@@ -1,23 +1,36 @@
 import {getMatchById} from "@/apis/match";
 import {LOGO_DEFAULT} from "@/constant";
+import {AuthContext} from "@/context/AuthContext";
 import {IMatch, ITip} from "@/interfaces";
 import moment from "moment";
 import Image from "next/image";
 import Link from "next/link";
-import React, {useEffect, useState} from "react";
+import {useRouter} from "next/router";
+import React, {useContext, useEffect, useState} from "react";
 import {AiOutlineHeart} from "react-icons/ai";
 import {BiMessage} from "react-icons/bi";
 import {useInView} from "react-intersection-observer";
+import {toast} from "react-toastify";
 
 type Props = {
 	item: ITip;
 };
 
 function NewestTipItem1({item}: Props) {
+	const {user} = useContext(AuthContext);
+	const router = useRouter();
+
 	const [match, setMatch] = useState<IMatch>();
 	const {ref, inView} = useInView({
 		triggerOnce: true,
 	});
+	const handleClickBtn = (event: any) => {
+		if (user) {
+			router.push(`/tips/${item?.slug}`);
+		} else {
+			toast.error("Bạn cần đăng nhập để xem tips");
+		}
+	};
 
 	const getMatch = async () => {
 		try {
@@ -31,24 +44,6 @@ function NewestTipItem1({item}: Props) {
 	useEffect(() => {
 		if (inView) getMatch();
 	}, [inView, item?.matchId]);
-
-	const genOdd = () => {
-		if (item?.odd?.choosen === "initialOver")
-			return `TÀI : +` + item?.odd?.initialHandicap;
-
-		if (item?.odd?.choosen === "initialUnder")
-			return `XỈU : +` + item?.odd?.initialHandicap;
-
-		if (item?.odd?.choosen === "initialHome")
-			return (
-				match?.homeName + ` + ${Math.abs(Number(item?.odd?.initialHandicap))}`
-			);
-
-		if (item?.odd?.choosen === "initialAway")
-			return (
-				match?.awayName + ` + ${Math.abs(Number(item?.odd?.initialHandicap))}`
-			);
-	};
 
 	const genWinLose = () => {
 		if (item?.odd?.choosen === "initialOver")
@@ -215,14 +210,12 @@ function NewestTipItem1({item}: Props) {
 					className="truncate"
 					dangerouslySetInnerHTML={{__html: `${item.content}`}}
 				></p>
-				<p>
-					<Link
-						href={`/tips/${item.slug}`}
-						className="text-[#2C3882] whitespace-nowrap pl-2"
-					>
-						[Xem tiếp]
-					</Link>
-				</p>
+				<button
+					onClick={handleClickBtn}
+					className="text-[#2C3882] whitespace-nowrap pl-2"
+				>
+					[Xem tiếp]
+				</button>
 			</div>
 
 			<div className="flex mt-4 items-center justify-between">
@@ -234,11 +227,12 @@ function NewestTipItem1({item}: Props) {
 						<div className="border bg-red-600 text-white rounded-[4px] text-xs px-2 py-1 font-semibold">
 							{genOddHDP(item?.odd)?.oddTitle}
 						</div>
-						<Link href={`/tips/${item?.slug}`}>
-							<button className="border border-secondary text-secondary rounded-[4px] text-xs px-2 py-1 font-semibold">
-								XEM TIPS
-							</button>
-						</Link>
+						<button
+							onClick={handleClickBtn}
+							className="border border-secondary text-secondary rounded-[4px] text-xs px-2 py-1 font-semibold"
+						>
+							XEM TIPS
+						</button>
 						<Link href={`/truc-tiep/${item?.matchId}`}>
 							<button className="border border-secondary text-secondary rounded-[4px] text-xs px-2 py-1 font-semibold">
 								TRẬN ĐẤU

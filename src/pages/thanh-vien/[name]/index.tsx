@@ -1,5 +1,6 @@
 import {getTipByUserOrGroup} from "@/apis/tip";
 import {getFavouriteLeagueByUser, getRankTable, getUserInfo} from "@/apis/user";
+import UserRankTableV2 from "@/components/UserRankTableV2";
 import AnalyticMember from "@/containers/Member/AnalyticMember";
 import AnalyticsIncoming from "@/containers/Member/AnalyticsIncoming";
 import InformationMember from "@/containers/Member/InformationMember";
@@ -23,7 +24,6 @@ function MemberPage({
 	tips: any;
 	favouriteLeague: any[];
 }) {
-	console.log("tips", tips);
 	return (
 		<div className="container m-auto mt-6 md:px-4 xl:px-2">
 			<div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
@@ -33,7 +33,11 @@ function MemberPage({
 				{/* <SharpChart /> */}
 				<LeagueMember favouriteLeague={favouriteLeague} />
 				<NewestTip tips={tips} />
-				<TopTipter rank={rank} />
+				{/* <TopTipter rank={rank} /> */}
+				<div className="col-span-12 lg:col-span-3 h-fit order-6">
+					<Refund />
+					<UserRankTableV2 />
+				</div>
 			</div>
 		</div>
 	);

@@ -116,7 +116,7 @@ function NewestTipItem({item}: Props) {
 	};
 
 	return (
-		<div ref={ref} className="border-b p-1 px-4 mb-4 tips-item relative">
+		<div ref={ref} className="p-1 px-4 mb-4 tips-item relative">
 			<div className="bg-[url('/tips-tag.svg')] text-white text-center bg-no-repeat bg-center bg-cover absolute w-[300px] top-0 left-[50%] translate-x-[-50%] truncate">
 				{match?.leagueName}
 			</div>

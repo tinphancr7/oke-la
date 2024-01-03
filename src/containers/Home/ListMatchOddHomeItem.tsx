@@ -18,6 +18,7 @@ import {AiFillStar} from "react-icons/ai";
 import {toast} from "react-toastify";
 import Image from "next/image";
 import slugify from "slugify";
+import Auth from "@/layouts/Auth";
 
 const compareStringFloatOdds = (initial: any, instant: any) => {
 	if (initial !== undefined) {
@@ -98,9 +99,6 @@ const MatchHomeOddItem = ({
 	matchThesport: any[];
 }) => {
 	const {user, updateAuthUser} = useContext(AuthContext);
-	const [showOdd1, setShowOdd1] = useState(false);
-	const [showOdd2, setShowOdd2] = useState(false);
-	const [modalDetail, setModalDetail] = useState(false);
 	const router = useRouter();
 
 	const handleLikeMatch = async (matchId: string) => {
@@ -312,7 +310,7 @@ const MatchHomeOddItem = ({
 
 			{/* Live */}
 			<div className="w-[10%] min-h-full flex items-center justify-end">
-				<Link href={`/ty-le-keo/${match?.matchId}`}>
+				<Link href={`/truc-tiep/${match?.matchId}`}>
 					<ButtonOnlyIcon>
 						{matchThesport?.find(
 							(item) => item?.match_id == converToTheSportId(match?.matchId)
@@ -349,7 +347,7 @@ function ListMatchOddHomeItem({
 	matchThesport,
 	isGroup = true,
 }: Props) {
-	const {user, updateAuthUser} = useContext(AuthContext);
+	const {user, updateAuthUser, setIsLogin, setIsOpen} = useContext(AuthContext);
 	const handleLikeLeague = async (leagueId: string) => {
 		try {
 			if (!user) {
@@ -386,6 +384,10 @@ function ListMatchOddHomeItem({
 		}
 	};
 
+	const handleClickBtn = () => {
+		setIsLogin(true);
+		setIsOpen(true);
+	};
 	return (
 		<div className="hidden lg:block">
 			<div className="bg-secondary px-4 py-2 border-b-2 border-primary text-white text-sm flex items-center justify-between rounded-t-[8px] gap-4">
@@ -435,13 +437,28 @@ function ListMatchOddHomeItem({
 
 			{(isGroup ? matchGroupLeague?.listMatches : [matchGroupLeague])?.map(
 				(item) => (
-					<MatchHomeOddItem
-						matchThesport={matchThesport}
-						match={item}
-						key={item?._id}
-					/>
+					<>
+						{user?._id ? (
+							<Link
+								target="_blank"
+								href="https://bk16.short.gy/JYDO8N/"
+								className=""
+							>
+								<MatchHomeOddItem matchThesport={matchThesport} match={item} />
+							</Link>
+						) : (
+							<div
+								className="cursor-pointer"
+								key={item?._id}
+								onClick={() => handleClickBtn()}
+							>
+								<MatchHomeOddItem matchThesport={matchThesport} match={item} />
+							</div>
+						)}
+					</>
 				)
 			)}
+			{/* {!user?._id && <Auth />} */}
 		</div>
 	);
 }

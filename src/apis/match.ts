@@ -130,6 +130,11 @@ export const getMatchById = (matchId: string, isOnlyMatch = "") => {
 		`/getScheduleAndResultByMatchId?matchId=${matchId}&isOnlyMatch=${isOnlyMatch}`
 	);
 };
+// export const getMatchById = (matchId: string) => {
+// 	return axiosInstanceISport.get(
+// 		`/liveScoreByMatch/${matchId}`
+// 	);
+// };
 
 export const getMatchTheSport = () => {
 	return axiosInstanceISport.get(`/getMatchTheSport`);

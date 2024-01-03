@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import {FaFacebookF, FaTiktok, FaTwitter, FaYoutube} from "react-icons/fa";
 const Footer = () => {
 	return (
 		// Ngay đây có z-50 nè ai muốn thêm thì thêm nha
@@ -73,10 +74,27 @@ const Footer = () => {
 							<span className="text-xs font-normal text-black">
 								Theo dõi chúng tôi:
 							</span>
-							<Image src="/images/youtube.png" width={24} height={24} alt="" />
-							<Image src="/images/linkdin.png" width={24} height={24} alt="" />
-							<Image src="/images/facebook.png" width={24} height={24} alt="" />
-							<Image src="/images/twitch.png" width={24} height={24} alt="" />
+
+							<Link href="/">
+								<FaYoutube size={20} />
+							</Link>
+							<a
+								href="https://www.tiktok.com/@banhgiosports?is_from_webapp=1&sender_device=pc"
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								<FaTiktok size={20} />
+							</a>
+							<a
+								href="https://www.facebook.com/profile.php?id=61554548351310"
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								<FaFacebookF size={20} />
+							</a>
+							<Link href="/">
+								<FaTwitter size={20} />
+							</Link>
 						</div>
 					</div>
 				</div>

@@ -98,14 +98,6 @@ function Header() {
 						</Link>
 					</div>
 					<div className="gap-x-6 flex items-center h-full">
-						{/* <div className="flex items-center bg-white px-4 py-2 rounded-lg gap-x-4">
-              <IconSearch />
-
-              <input
-                placeholder="Tìm kiếm trận đấu"
-                className="focus:border-0 focus:outline-0"
-              />
-            </div> */}
 						<div className="flex items-center  h-full">
 							{menus
 								?.filter((e) => !e?.mobile)
